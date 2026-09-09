@@ -189,21 +189,220 @@
 </footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
-(function(){var t=document.querySelector("[data-theme-toggle]"),r=document.documentElement;var d=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");r.setAttribute("data-theme",d);var sun='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';var moon='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';function setIcon(m){t.innerHTML=m==="dark"?sun:moon;}setIcon(d);t.addEventListener("click",function(){d=d==="dark"?"light":"dark";r.setAttribute("data-theme",d);setIcon(d);});})();
+(function(){
+  var t=document.querySelector("[data-theme-toggle]"),r=document.documentElement;
+  var d=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  r.setAttribute("data-theme",d);
+  var sun='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  var moon='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  function setIcon(m){t.innerHTML=m==="dark"?sun:moon;}
+  setIcon(d);
+  t.addEventListener("click",function(){d=d==="dark"?"light":"dark";r.setAttribute("data-theme",d);setIcon(d);});
+})();
+
 var followersData=null,followingData=null,unfollowerList=[],filteredList=[];
 var PER_PAGE=25,currentPage=1;
-function parseInstagramHTML(html){var parser=new DOMParser(),doc=parser.parseFromString(html,"text/html"),results=[];var links=doc.querySelectorAll("a[href*='instagram.com/_u/']");if(links.length>0){links.forEach(function(a){var href=a.getAttribute("href"),match=href.match(/instagram\.com\/_u\/([^/?#]+)/);if(match){var username=match[1].trim().toLowerCase(),date="";var parent=a.closest("div")||a.parentElement;if(parent){var m=parent.textContent.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i);if(m)date=m[0];}if(username)results.push({username:username,date:date});}});return results;}var body=doc.body.innerText||doc.body.textContent;var lines=body.split("\n").map(function(l){return l.trim();}).filter(function(l){return l.length>0;});var dateRx=/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i;for(var i=0;i<lines.length;i++){var line=lines[i];if(dateRx.test(line)||/^\d{1,2}:\d{2}/.test(line))continue;if(line.length<=30&&!/\s/.test(line)&&!/^https?:/.test(line)&&line.length>0){var uname=line.toLowerCase(),date="";if(i+1<lines.length){var nxt=lines[i+1],m2=nxt.match(dateRx);if(m2){date=m2[0];i++;}}results.push({username:uname,date:date});}}return results;}
-document.getElementById("followersFile").addEventListener("change",async function(e){var file=e.target.files[0];if(!file)return;var html=await file.text();followersData=parseInstagramHTML(html);document.getElementById("followersCard").classList.add("uploaded");document.getElementById("followersIcon").textContent="\u2705";document.getElementById("followersStatus").textContent=followersData.length+" followers terdeteksi";checkReady();});
-document.getElementById("followingFile").addEventListener("change",async function(e){var file=e.target.files[0];if(!file)return;var html=await file.text();followingData=parseInstagramHTML(html);document.getElementById("followingCard").classList.add("uploaded");document.getElementById("followingIcon").textContent="\u2705";document.getElementById("followingStatus").textContent=followingData.length+" following terdeteksi";checkReady();});
-["followersCard","followingCard"].forEach(function(id){var card=document.getElementById(id);card.addEventListener("dragover",function(e){e.preventDefault();card.classList.add("dragover");});card.addEventListener("dragleave",function(){card.classList.remove("dragover");});card.addEventListener("drop",function(e){e.preventDefault();card.classList.remove("dragover");});});
-function checkReady(){document.getElementById("analyzeBtn").disabled=!(followersData&&followingData);}
-function analyze(){if(!followersData||!followingData)return;var fset=new Set(followersData.map(function(f){return f.username;}));unfollowerList=followingData.filter(function(f){return !fset.has(f.username);});document.getElementById("statFollowing").textContent=followingData.length.toLocaleString("id");document.getElementById("statFollowers").textContent=followersData.length.toLocaleString("id");document.getElementById("statNotBack").textContent=unfollowerList.length.toLocaleString("id");document.getElementById("statsRow").style.display="grid";document.getElementById("resultsSection").style.display="block";filteredList=unfollowerList.slice();currentPage=1;renderTable();showToast("Ditemukan "+unfollowerList.length+" akun yang tidak balik follow","success");setTimeout(function(){document.getElementById("statsRow").scrollIntoView({behavior:"smooth",block:"start"});},100);}
-function filterAndRender(){var q=document.getElementById("searchInput").value.toLowerCase().trim();filteredList=q?unfollowerList.filter(function(u){return u.username.includes(q);}):unfollowerList.slice();currentPage=1;renderTable();}
-function renderTable(){var tbody=document.getElementById("tableBody"),total=filteredList.length;document.getElementById("resultCount").textContent="("+total.toLocaleString("id")+")";if(total===0){tbody.innerHTML='<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">&#x1F50D;</div><h3>Tidak ada hasil</h3><p>Coba kata kunci yang berbeda.</p></div></td></tr>';document.getElementById("pagination").innerHTML="";return;}var start=(currentPage-1)*PER_PAGE,page=filteredList.slice(start,start+PER_PAGE),off=start;tbody.innerHTML=page.map(function(u,i){var init=u.username[0].toUpperCase();return '<tr><td class="row-num">'+(off+i+1)+'</td><td><div class="username-cell"><div class="avatar-placeholder">'+init+'</div><div class="username-wrap"><div class="uname">@'+u.username+'</div><a class="ulink" href="https://www.instagram.com/'+u.username+'/" target="_blank" rel="noopener noreferrer">instagram.com/'+u.username+'</a></div></div></td><td class="fdate">'+(u.date||"&mdash;")+'</td><td><a class="btn-visit" href="https://www.instagram.com/'+u.username+'/" target="_blank" rel="noopener noreferrer">Buka &#x2197;</a></td></tr>';}).join("");renderPagination(total);}
-function renderPagination(total){var tp=Math.ceil(total/PER_PAGE),pag=document.getElementById("pagination");if(tp<=1){pag.innerHTML="";return;}var h='<button class="page-btn" onclick="goPage('+(currentPage-1)+')" '+(currentPage===1?"disabled":"")+'>\u2039</button>';var range=[];for(var p=1;p<=tp;p++){if(p===1||p===tp||(p>=currentPage-2&&p<=currentPage+2))range.push(p);else if(range[range.length-1]!=="...")range.push("...");}range.forEach(function(p){if(p==="...")h+='<button class="page-btn" disabled>&hellip;</button>';else h+='<button class="page-btn '+(p===currentPage?"active":"")+' " onclick="goPage('+p+')">'+p+'</button>';});h+='<button class="page-btn" onclick="goPage('+(currentPage+1)+')" '+(currentPage===tp?"disabled":"")+'>\u203A</button>';pag.innerHTML=h;}
-function goPage(p){var tp=Math.ceil(filteredList.length/PER_PAGE);if(p<1||p>tp)return;currentPage=p;renderTable();document.getElementById("resultsSection").scrollIntoView({behavior:"smooth",block:"start"});}
-function exportCSV(){if(!filteredList.length)return;var rows=[["No","Username","URL","Diikuti Sejak"]];filteredList.forEach(function(u,i){rows.push([i+1,u.username,"https://www.instagram.com/"+u.username+"/",u.date||""]);});var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(",");}).join("\n");var blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="ig-unfollowers-"+new Date().toISOString().slice(0,10)+".csv";a.click();showToast("CSV berhasil diunduh!","success");}
-function showToast(msg,type){var t=document.getElementById("toast");var icon=type==="success"?"\u2705":type==="error"?"\u274C":"\u2139\uFE0F";t.className="toast "+type;t.innerHTML="<span>"+icon+"</span><span>"+msg+"</span>";t.classList.add("show");setTimeout(function(){t.classList.remove("show");},4000);}
+
+/**
+ * Parser utama - mendukung DUA format file Instagram:
+ * 1. Format following.html  : punya <a href="instagram.com/_u/username"> -> ekstrak dari href
+ * 2. Format followers_1.html: TIDAK ada link, hanya teks username + baris tanggal di bawahnya
+ */
+function parseInstagramHTML(html) {
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(html, "text/html");
+  var results = [];
+
+  // ── METODE 1: ekstrak dari link href (format following.html) ──────────────
+  var links = doc.querySelectorAll("a[href*='instagram.com/_u/']");
+  if (links.length > 0) {
+    links.forEach(function(a) {
+      var href = a.getAttribute("href");
+      var match = href.match(/instagram\.com\/_u\/([^/?#\s]+)/);
+      if (match) {
+        var username = match[1].trim().toLowerCase();
+        var date = "";
+        // cari tanggal di elemen sekitar link
+        var container = a.closest("div") || a.parentElement;
+        if (container) {
+          var m = container.textContent.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i);
+          if (m) date = m[0];
+        }
+        if (username) results.push({ username: username, date: date });
+      }
+    });
+    return results;
+  }
+
+  // ── METODE 2: parse teks mentah (format followers_1.html, tanpa link) ────
+  // Format: setiap entri = baris username, diikuti baris tanggal
+  // Contoh:
+  //   fitrahrahmat2
+  //   Aug 31, 2026 12:56 am
+  //   aaluuull
+  //   Jul 04, 2026 3:59 pm
+
+  // Regex untuk mendeteksi baris tanggal Instagram
+  var dateLineRx = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i;
+  // Regex username Instagram yang valid: huruf, angka, titik, underscore, 1-30 karakter
+  var usernameRx = /^[a-zA-Z0-9._]{1,30}$/;
+  // Daftar kata yang harus diabaikan (bukan username)
+  var ignoreWords = /^(followers|following|date|time|instagram|connections|am|pm)$/i;
+
+  // Ambil semua teks dari body, pecah per baris
+  var bodyText = doc.body ? (doc.body.innerText || doc.body.textContent) : "";
+  var lines = bodyText.split(/\r?\n/).map(function(l){ return l.trim(); }).filter(function(l){ return l.length > 0; });
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+
+    // Lewati baris tanggal
+    if (dateLineRx.test(line)) continue;
+    // Lewati baris yang mengandung URL
+    if (/https?:\/\//i.test(line)) continue;
+    // Lewati kata-kata yang jelas bukan username
+    if (ignoreWords.test(line)) continue;
+    // Lewati baris yang terlalu panjang (judul halaman, dll)
+    if (line.length > 30) continue;
+
+    // Cek apakah baris ini cocok pola username IG
+    if (usernameRx.test(line)) {
+      var username = line.toLowerCase();
+      var date = "";
+      // Cek apakah baris berikutnya adalah tanggal
+      if (i + 1 < lines.length && dateLineRx.test(lines[i + 1])) {
+        // Ambil hanya bagian tanggal (buang jam)
+        var dateMatch = lines[i + 1].match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i);
+        if (dateMatch) date = dateMatch[0];
+        i++; // lewati baris tanggal
+      }
+      results.push({ username: username, date: date });
+    }
+  }
+
+  return results;
+}
+
+document.getElementById("followersFile").addEventListener("change", async function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var html = await file.text();
+  followersData = parseInstagramHTML(html);
+  document.getElementById("followersCard").classList.add("uploaded");
+  document.getElementById("followersIcon").textContent = "\u2705";
+  document.getElementById("followersStatus").textContent = followersData.length + " followers terdeteksi";
+  checkReady();
+});
+
+document.getElementById("followingFile").addEventListener("change", async function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var html = await file.text();
+  followingData = parseInstagramHTML(html);
+  document.getElementById("followingCard").classList.add("uploaded");
+  document.getElementById("followingIcon").textContent = "\u2705";
+  document.getElementById("followingStatus").textContent = followingData.length + " following terdeteksi";
+  checkReady();
+});
+
+["followersCard","followingCard"].forEach(function(id) {
+  var card = document.getElementById(id);
+  card.addEventListener("dragover", function(e){ e.preventDefault(); card.classList.add("dragover"); });
+  card.addEventListener("dragleave", function(){ card.classList.remove("dragover"); });
+  card.addEventListener("drop", function(e){ e.preventDefault(); card.classList.remove("dragover"); });
+});
+
+function checkReady() {
+  document.getElementById("analyzeBtn").disabled = !(followersData && followingData);
+}
+
+function analyze() {
+  if (!followersData || !followingData) return;
+  var fset = new Set(followersData.map(function(f){ return f.username; }));
+  unfollowerList = followingData.filter(function(f){ return !fset.has(f.username); });
+  document.getElementById("statFollowing").textContent = followingData.length.toLocaleString("id");
+  document.getElementById("statFollowers").textContent = followersData.length.toLocaleString("id");
+  document.getElementById("statNotBack").textContent = unfollowerList.length.toLocaleString("id");
+  document.getElementById("statsRow").style.display = "grid";
+  document.getElementById("resultsSection").style.display = "block";
+  filteredList = unfollowerList.slice();
+  currentPage = 1;
+  renderTable();
+  showToast("Ditemukan " + unfollowerList.length + " akun yang tidak balik follow", "success");
+  setTimeout(function(){ document.getElementById("statsRow").scrollIntoView({ behavior:"smooth", block:"start" }); }, 100);
+}
+
+function filterAndRender() {
+  var q = document.getElementById("searchInput").value.toLowerCase().trim();
+  filteredList = q ? unfollowerList.filter(function(u){ return u.username.includes(q); }) : unfollowerList.slice();
+  currentPage = 1;
+  renderTable();
+}
+
+function renderTable() {
+  var tbody = document.getElementById("tableBody"), total = filteredList.length;
+  document.getElementById("resultCount").textContent = "(" + total.toLocaleString("id") + ")";
+  if (total === 0) {
+    tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">&#x1F50D;</div><h3>Tidak ada hasil</h3><p>Coba kata kunci yang berbeda.</p></div></td></tr>';
+    document.getElementById("pagination").innerHTML = "";
+    return;
+  }
+  var start = (currentPage - 1) * PER_PAGE, page = filteredList.slice(start, start + PER_PAGE), off = start;
+  tbody.innerHTML = page.map(function(u, i) {
+    var init = u.username[0].toUpperCase();
+    return '<tr><td class="row-num">' + (off + i + 1) + '</td><td><div class="username-cell"><div class="avatar-placeholder">' + init + '</div><div class="username-wrap"><div class="uname">@' + u.username + '</div><a class="ulink" href="https://www.instagram.com/' + u.username + '/" target="_blank" rel="noopener noreferrer">instagram.com/' + u.username + '</a></div></div></td><td class="fdate">' + (u.date || "&mdash;") + '</td><td><a class="btn-visit" href="https://www.instagram.com/' + u.username + '/" target="_blank" rel="noopener noreferrer">Buka &#x2197;</a></td></tr>';
+  }).join("");
+  renderPagination(total);
+}
+
+function renderPagination(total) {
+  var tp = Math.ceil(total / PER_PAGE), pag = document.getElementById("pagination");
+  if (tp <= 1) { pag.innerHTML = ""; return; }
+  var h = '<button class="page-btn" onclick="goPage(' + (currentPage - 1) + ')" ' + (currentPage === 1 ? "disabled" : "") + '>\u2039</button>';
+  var range = [];
+  for (var p = 1; p <= tp; p++) {
+    if (p === 1 || p === tp || (p >= currentPage - 2 && p <= currentPage + 2)) range.push(p);
+    else if (range[range.length - 1] !== "...") range.push("...");
+  }
+  range.forEach(function(p) {
+    if (p === "...") h += '<button class="page-btn" disabled>&hellip;</button>';
+    else h += '<button class="page-btn ' + (p === currentPage ? "active" : "") + '" onclick="goPage(' + p + ')">' + p + '</button>';
+  });
+  h += '<button class="page-btn" onclick="goPage(' + (currentPage + 1) + ')" ' + (currentPage === tp ? "disabled" : "") + '>\u203A</button>';
+  pag.innerHTML = h;
+}
+
+function goPage(p) {
+  var tp = Math.ceil(filteredList.length / PER_PAGE);
+  if (p < 1 || p > tp) return;
+  currentPage = p;
+  renderTable();
+  document.getElementById("resultsSection").scrollIntoView({ behavior:"smooth", block:"start" });
+}
+
+function exportCSV() {
+  if (!filteredList.length) return;
+  var rows = [["No","Username","URL","Diikuti Sejak"]];
+  filteredList.forEach(function(u, i) {
+    rows.push([i + 1, u.username, "https://www.instagram.com/" + u.username + "/", u.date || ""]);
+  });
+  var csv = rows.map(function(r){ return r.map(function(v){ return '"' + String(v).replace(/"/g, '""') + '"'; }).join(","); }).join("\n");
+  var blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "ig-unfollowers-" + new Date().toISOString().slice(0, 10) + ".csv";
+  a.click();
+  showToast("CSV berhasil diunduh!", "success");
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById("toast");
+  var icon = type === "success" ? "\u2705" : type === "error" ? "\u274C" : "\u2139\uFE0F";
+  t.className = "toast " + type;
+  t.innerHTML = "<span>" + icon + "</span><span>" + msg + "</span>";
+  t.classList.add("show");
+  setTimeout(function(){ t.classList.remove("show"); }, 4000);
+}
 </script>
 </body>
 </html>
