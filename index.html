@@ -203,78 +203,109 @@
 var followersData=null,followingData=null,unfollowerList=[],filteredList=[];
 var PER_PAGE=25,currentPage=1;
 
+// Regex pola username Instagram valid: huruf, angka, titik, underscore, 1-30 karakter
+var IG_USERNAME_RX = /^[a-zA-Z0-9._]{1,30}$/;
+// Regex baris tanggal Instagram export: "Jan 01, 2024 12:00 am"
+var DATE_LINE_RX = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i;
+
 /**
- * Parser utama - mendukung DUA format file Instagram:
- * 1. Format following.html  : punya <a href="instagram.com/_u/username"> -> ekstrak dari href
- * 2. Format followers_1.html: TIDAK ada link, hanya teks username + baris tanggal di bawahnya
+ * Ekstrak semua text node dari dokumen HTML menjadi array string bersih.
+ * Ini menggantikan innerText (tidak bekerja di DOMParser) dan textContent
+ * (menggabungkan semua teks tanpa pemisah).
+ * Caranya: walk semua node, ambil TEXT_NODE yang punya konten bermakna.
+ */
+function extractTextLines(doc) {
+  var lines = [];
+  var walker = doc.createTreeWalker(doc.body, 4 /* NodeFilter.SHOW_TEXT */, null, false);
+  var node;
+  while ((node = walker.nextNode())) {
+    // Pecah per newline, trim, buang yang kosong
+    var parts = node.nodeValue.split(/\r?\n/);
+    for (var i = 0; i < parts.length; i++) {
+      var t = parts[i].trim();
+      if (t.length > 0) lines.push(t);
+    }
+  }
+  return lines;
+}
+
+/**
+ * Parser utama — mendukung DUA format file Instagram:
+ * METODE 1 (following.html)  : ada <a href="instagram.com/_u/username">
+ * METODE 2 (followers_1.html): tidak ada link, hanya text node username + tanggal
  */
 function parseInstagramHTML(html) {
   var parser = new DOMParser();
   var doc = parser.parseFromString(html, "text/html");
   var results = [];
 
-  // ── METODE 1: ekstrak dari link href (format following.html) ──────────────
+  // ── METODE 1: cari link instagram.com/_u/ ──────────────────────────────
   var links = doc.querySelectorAll("a[href*='instagram.com/_u/']");
   if (links.length > 0) {
     links.forEach(function(a) {
       var href = a.getAttribute("href");
-      var match = href.match(/instagram\.com\/_u\/([^/?#\s]+)/);
-      if (match) {
-        var username = match[1].trim().toLowerCase();
-        var date = "";
-        // cari tanggal di elemen sekitar link
-        var container = a.closest("div") || a.parentElement;
-        if (container) {
-          var m = container.textContent.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i);
-          if (m) date = m[0];
-        }
-        if (username) results.push({ username: username, date: date });
+      var m = href.match(/instagram\.com\/_u\/([^/?#\s]+)/);
+      if (!m) return;
+      var username = m[1].trim().toLowerCase();
+      var date = "";
+      var container = a.closest("div") || a.parentElement;
+      if (container) {
+        var dm = container.textContent.match(DATE_LINE_RX);
+        if (dm) date = dm[0];
       }
+      if (username) results.push({ username: username, date: date });
     });
     return results;
   }
 
-  // ── METODE 2: parse teks mentah (format followers_1.html, tanpa link) ────
-  // Format: setiap entri = baris username, diikuti baris tanggal
-  // Contoh:
-  //   fitrahrahmat2
-  //   Aug 31, 2026 12:56 am
-  //   aaluuull
-  //   Jul 04, 2026 3:59 pm
+  // ── METODE 2: cari link instagram.com/username (tanpa _u/) ────────────
+  var links2 = doc.querySelectorAll("a[href*='instagram.com/']");
+  var foundViaLink2 = false;
+  links2.forEach(function(a) {
+    var href = a.getAttribute("href") || "";
+    // Abaikan link ke halaman Instagram bukan profil
+    if (/instagram\.com\/(p\/|reel\/|explore\/|accounts\/)/.test(href)) return;
+    var m = href.match(/instagram\.com\/([a-zA-Z0-9._]{1,30})\/?$/);
+    if (!m) return;
+    var username = m[1].trim().toLowerCase();
+    if (username === "instagram") return;
+    var date = "";
+    var container = a.closest("div") || a.parentElement;
+    if (container) {
+      var dm = container.textContent.match(DATE_LINE_RX);
+      if (dm) date = dm[0];
+    }
+    results.push({ username: username, date: date });
+    foundViaLink2 = true;
+  });
+  if (foundViaLink2) return results;
 
-  // Regex untuk mendeteksi baris tanggal Instagram
-  var dateLineRx = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i;
-  // Regex username Instagram yang valid: huruf, angka, titik, underscore, 1-30 karakter
-  var usernameRx = /^[a-zA-Z0-9._]{1,30}$/;
-  // Daftar kata yang harus diabaikan (bukan username)
-  var ignoreWords = /^(followers|following|date|time|instagram|connections|am|pm)$/i;
-
-  // Ambil semua teks dari body, pecah per baris
-  var bodyText = doc.body ? (doc.body.innerText || doc.body.textContent) : "";
-  var lines = bodyText.split(/\r?\n/).map(function(l){ return l.trim(); }).filter(function(l){ return l.length > 0; });
+  // ── METODE 3: parse text node murni (followers_1.html tanpa href) ─────
+  // Gunakan TreeWalker untuk ambil text node satu per satu — BUKAN innerText
+  // (innerText kosong di DOMParser) dan BUKAN textContent (tidak ada newline)
+  var lines = extractTextLines(doc);
 
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i];
 
     // Lewati baris tanggal
-    if (dateLineRx.test(line)) continue;
-    // Lewati baris yang mengandung URL
+    if (DATE_LINE_RX.test(line)) continue;
+    // Lewati URL
     if (/https?:\/\//i.test(line)) continue;
-    // Lewati kata-kata yang jelas bukan username
-    if (ignoreWords.test(line)) continue;
-    // Lewati baris yang terlalu panjang (judul halaman, dll)
+    // Lewati baris terlalu panjang (judul halaman HTML, dll)
     if (line.length > 30) continue;
+    // Lewati angka murni (bukan username)
+    if (/^\d+$/.test(line)) continue;
 
-    // Cek apakah baris ini cocok pola username IG
-    if (usernameRx.test(line)) {
+    // Cocokkan pola username Instagram
+    if (IG_USERNAME_RX.test(line)) {
       var username = line.toLowerCase();
       var date = "";
-      // Cek apakah baris berikutnya adalah tanggal
-      if (i + 1 < lines.length && dateLineRx.test(lines[i + 1])) {
-        // Ambil hanya bagian tanggal (buang jam)
-        var dateMatch = lines[i + 1].match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i);
-        if (dateMatch) date = dateMatch[0];
-        i++; // lewati baris tanggal
+      // Baris berikutnya kemungkinan adalah tanggal
+      if (i + 1 < lines.length && DATE_LINE_RX.test(lines[i + 1])) {
+        var dm2 = lines[i + 1].match(DATE_LINE_RX);
+        if (dm2) date = dm2[0];
+        i++; // skip baris tanggal
       }
       results.push({ username: username, date: date });
     }
@@ -350,7 +381,7 @@ function renderTable() {
   var start = (currentPage - 1) * PER_PAGE, page = filteredList.slice(start, start + PER_PAGE), off = start;
   tbody.innerHTML = page.map(function(u, i) {
     var init = u.username[0].toUpperCase();
-    return '<tr><td class="row-num">' + (off + i + 1) + '</td><td><div class="username-cell"><div class="avatar-placeholder">' + init + '</div><div class="username-wrap"><div class="uname">@' + u.username + '</div><a class="ulink" href="https://www.instagram.com/' + u.username + '/" target="_blank" rel="noopener noreferrer">instagram.com/' + u.username + '</a></div></div></td><td class="fdate">' + (u.date || "&mdash;") + '</td><td><a class="btn-visit" href="https://www.instagram.com/' + u.username + '/" target="_blank" rel="noopener noreferrer">Buka &#x2197;</a></td></tr>';
+    return '<tr><td class="row-num">' + (off+i+1) + '</td><td><div class="username-cell"><div class="avatar-placeholder">' + init + '</div><div class="username-wrap"><div class="uname">@' + u.username + '</div><a class="ulink" href="https://www.instagram.com/' + u.username + '/" target="_blank" rel="noopener noreferrer">instagram.com/' + u.username + '</a></div></div></td><td class="fdate">' + (u.date||"&mdash;") + '</td><td><a class="btn-visit" href="https://www.instagram.com/' + u.username + '/" target="_blank" rel="noopener noreferrer">Buka &#x2197;</a></td></tr>';
   }).join("");
   renderPagination(total);
 }
@@ -358,23 +389,23 @@ function renderTable() {
 function renderPagination(total) {
   var tp = Math.ceil(total / PER_PAGE), pag = document.getElementById("pagination");
   if (tp <= 1) { pag.innerHTML = ""; return; }
-  var h = '<button class="page-btn" onclick="goPage(' + (currentPage - 1) + ')" ' + (currentPage === 1 ? "disabled" : "") + '>\u2039</button>';
+  var h = '<button class="page-btn" onclick="goPage('+(currentPage-1)+')" '+(currentPage===1?"disabled":"")+'>&#x2039;</button>';
   var range = [];
   for (var p = 1; p <= tp; p++) {
-    if (p === 1 || p === tp || (p >= currentPage - 2 && p <= currentPage + 2)) range.push(p);
-    else if (range[range.length - 1] !== "...") range.push("...");
+    if (p===1||p===tp||(p>=currentPage-2&&p<=currentPage+2)) range.push(p);
+    else if (range[range.length-1]!=="...") range.push("...");
   }
-  range.forEach(function(p) {
-    if (p === "...") h += '<button class="page-btn" disabled>&hellip;</button>';
-    else h += '<button class="page-btn ' + (p === currentPage ? "active" : "") + '" onclick="goPage(' + p + ')">' + p + '</button>';
+  range.forEach(function(p){
+    if (p==="...") h+='<button class="page-btn" disabled>&hellip;</button>';
+    else h+='<button class="page-btn '+(p===currentPage?"active":"")+ '" onclick="goPage('+p+')">'+p+'</button>';
   });
-  h += '<button class="page-btn" onclick="goPage(' + (currentPage + 1) + ')" ' + (currentPage === tp ? "disabled" : "") + '>\u203A</button>';
+  h+='<button class="page-btn" onclick="goPage('+(currentPage+1)+')" '+(currentPage===tp?"disabled":"")+'>&#x203A;</button>';
   pag.innerHTML = h;
 }
 
 function goPage(p) {
   var tp = Math.ceil(filteredList.length / PER_PAGE);
-  if (p < 1 || p > tp) return;
+  if (p<1||p>tp) return;
   currentPage = p;
   renderTable();
   document.getElementById("resultsSection").scrollIntoView({ behavior:"smooth", block:"start" });
@@ -383,23 +414,23 @@ function goPage(p) {
 function exportCSV() {
   if (!filteredList.length) return;
   var rows = [["No","Username","URL","Diikuti Sejak"]];
-  filteredList.forEach(function(u, i) {
-    rows.push([i + 1, u.username, "https://www.instagram.com/" + u.username + "/", u.date || ""]);
+  filteredList.forEach(function(u, i){
+    rows.push([i+1, u.username, "https://www.instagram.com/"+u.username+"/", u.date||""]);
   });
-  var csv = rows.map(function(r){ return r.map(function(v){ return '"' + String(v).replace(/"/g, '""') + '"'; }).join(","); }).join("\n");
+  var csv = rows.map(function(r){ return r.map(function(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }).join(","); }).join("\n");
   var blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
   var a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "ig-unfollowers-" + new Date().toISOString().slice(0, 10) + ".csv";
+  a.download = "ig-unfollowers-"+new Date().toISOString().slice(0,10)+".csv";
   a.click();
   showToast("CSV berhasil diunduh!", "success");
 }
 
 function showToast(msg, type) {
   var t = document.getElementById("toast");
-  var icon = type === "success" ? "\u2705" : type === "error" ? "\u274C" : "\u2139\uFE0F";
-  t.className = "toast " + type;
-  t.innerHTML = "<span>" + icon + "</span><span>" + msg + "</span>";
+  var icon = type==="success"?"\u2705":type==="error"?"\u274C":"\u2139\uFE0F";
+  t.className = "toast "+type;
+  t.innerHTML = "<span>"+icon+"</span><span>"+msg+"</span>";
   t.classList.add("show");
   setTimeout(function(){ t.classList.remove("show"); }, 4000);
 }
