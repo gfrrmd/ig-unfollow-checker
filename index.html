@@ -270,25 +270,6 @@ body{
   margin-top:7px;flex-shrink:0;
 }
 
-/* TOAST */
-.toast{
-  position:fixed;
-  bottom:max(24px,calc(env(safe-area-inset-bottom) + 80px));
-  left:50%;transform:translateX(-50%) translateY(140%);
-  z-index:999;background:var(--surf2);border:1px solid var(--bdr2);
-  border-radius:var(--r16);padding:12px 20px;box-shadow:var(--shadow-lg);
-  font-size:13px;font-weight:600;
-  display:flex;align-items:center;gap:8px;white-space:nowrap;
-  transition:transform .35s cubic-bezier(.16,1,.3,1);
-  max-width:calc(100vw - 40px);
-}
-.toast.show{transform:translateX(-50%) translateY(0);}
-.toast.ok{border-color:rgba(34,197,94,.38);}
-.toast.err{border-color:rgba(240,69,122,.38);}
-.toast-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.toast.ok .toast-dot{background:var(--green);}
-.toast.err .toast-dot{background:var(--pink);}
-
 /* FOOTER */
 .footer{
   text-align:center;
@@ -501,11 +482,6 @@ body{
   <p>Tidak terafiliasi dengan Instagram / Meta</p>
 </footer>
 
-<div class="toast" id="toast" role="status" aria-live="polite">
-  <div class="toast-dot"></div>
-  <span id="toastMsg"></span>
-</div>
-
 <script>
 /* ── Theme toggle ── */
 (function(){
@@ -580,7 +556,6 @@ function analyze(){
   document.getElementById('statsGrid').style.display='grid';
   document.getElementById('resultsSection').style.display='block';
   filtered=unfollowers.slice();page=1;render();
-  toast('Ditemukan '+unfollowers.length+' akun tidak balik follow','ok');
   if(window.innerWidth<860){
     setTimeout(function(){document.getElementById('statsGrid').scrollIntoView({behavior:'smooth',block:'start'});},120);
   }
@@ -632,15 +607,6 @@ function exportCSV(){
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
   a.download='unfollowme-'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
-  toast('CSV berhasil diunduh','ok');
-}
-
-function toast(msg,type){
-  var t=document.getElementById('toast');
-  t.className='toast '+(type||'');
-  document.getElementById('toastMsg').textContent=msg;
-  t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show');},3500);
 }
 </script>
 </body>
