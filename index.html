@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IG Unfollow Checker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root,[data-theme="light"]{--color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-surface-offset:#f0ede8;--color-border:#d4d1ca;--color-divider:#dcd9d5;--color-text:#28251d;--color-text-muted:#7a7974;--color-text-faint:#bab9b4;--color-primary:#e1306c;--color-primary-hover:#c1255a;--color-primary-highlight:#fce4ef;--color-secondary:#833ab4;--color-success:#437a22;--color-success-highlight:#d4dfcc;--shadow-sm:0 1px 2px oklch(0.2 0.01 80/.06);--shadow-md:0 4px 12px oklch(0.2 0.01 80/.1);--shadow-lg:0 12px 32px oklch(0.2 0.01 80/.14);--radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;--radius-full:9999px;--transition:180ms cubic-bezier(.16,1,.3,1);--font-display:'Sora',sans-serif;--font-body:'Inter',sans-serif;--text-xs:clamp(.75rem,.7rem + .25vw,.875rem);--text-sm:clamp(.875rem,.8rem + .35vw,1rem);--text-base:clamp(1rem,.95rem + .25vw,1.125rem);--text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);--text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);--text-2xl:clamp(2rem,1.2rem + 2.5vw,3.5rem);--space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--space-16:4rem;}
+    [data-theme="dark"]{--color-bg:#0d0d0f;--color-surface:#141416;--color-surface-2:#1a1a1d;--color-surface-offset:#1e1e22;--color-border:#2e2e34;--color-divider:#252529;--color-text:#e8e7e5;--color-text-muted:#888884;--color-text-faint:#555552;--color-primary:#f0567a;--color-primary-hover:#e83468;--color-primary-highlight:#3a1928;--color-secondary:#c678ff;--color-success:#6daa45;--color-success-highlight:#1e3318;--shadow-sm:0 1px 2px oklch(0 0 0/.3);--shadow-md:0 4px 12px oklch(0 0 0/.4);--shadow-lg:0 12px 32px oklch(0 0 0/.5);}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+    body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);background:var(--color-bg);line-height:1.6;}
+    img,svg{display:block;max-width:100%;}
+    button{cursor:pointer;font-family:var(--font-body);}
+    a,button{transition:color var(--transition),background var(--transition),border-color var(--transition),box-shadow var(--transition);}
+    :focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm);}
+    .header{position:sticky;top:0;z-index:100;background:color-mix(in oklch,var(--color-bg) 85%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--color-border);padding:var(--space-3) var(--space-6);}
+    .header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);}
+    .logo{display:flex;align-items:center;gap:var(--space-3);text-decoration:none;}
+    .logo-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;color:var(--color-text);}
+    .logo-title span{color:var(--color-primary);}
+    .theme-toggle{width:40px;height:40px;border-radius:var(--radius-full);background:var(--color-surface-offset);border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-text-muted);}
+    .theme-toggle:hover{background:var(--color-surface-2);color:var(--color-text);}
+    main{max-width:1100px;margin:0 auto;padding:var(--space-12) var(--space-6);}
+    .hero{text-align:center;margin-bottom:var(--space-12);}
+    .hero-badge{display:inline-flex;align-items:center;gap:var(--space-2);background:var(--color-primary-highlight);color:var(--color-primary);font-size:var(--text-xs);font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);margin-bottom:var(--space-4);}
+    .hero h1{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:700;line-height:1.1;margin-bottom:var(--space-4);text-wrap:balance;}
+    .hero h1 .gradient{background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .hero p{font-size:var(--text-base);color:var(--color-text-muted);max-width:52ch;margin:0 auto var(--space-6);text-wrap:pretty;}
+    .upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-5);margin-bottom:var(--space-8);}
+    @media(max-width:640px){.upload-grid{grid-template-columns:1fr;}}
+    .upload-card{background:var(--color-surface);border:2px dashed var(--color-border);border-radius:var(--radius-xl);padding:var(--space-8) var(--space-6);text-align:center;cursor:pointer;transition:all var(--transition);position:relative;overflow:hidden;display:block;}
+    .upload-card:hover,.upload-card.dragover{border-color:var(--color-primary);background:color-mix(in oklch,var(--color-primary) 5%,var(--color-surface));}
+    .upload-card.uploaded{border-style:solid;border-color:var(--color-success);background:color-mix(in oklch,var(--color-success) 5%,var(--color-surface));}
+    .upload-card input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+    .upload-icon{width:52px;height:52px;margin:0 auto var(--space-3);background:var(--color-surface-offset);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
+    .upload-card.uploaded .upload-icon{background:var(--color-success-highlight);}
+    .upload-card h3{font-family:var(--font-display);font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1);}
+    .upload-card p{font-size:var(--text-xs);color:var(--color-text-muted);}
+    .upload-card code{font-family:monospace;background:var(--color-surface-offset);padding:1px 4px;border-radius:3px;font-size:.9em;}
+    .upload-status{margin-top:var(--space-2);font-size:var(--text-xs);font-weight:600;color:var(--color-success);}
+    .btn-analyze{display:block;width:100%;max-width:320px;margin:0 auto var(--space-8);padding:var(--space-4) var(--space-8);background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));color:#fff;font-family:var(--font-display);font-size:var(--text-sm);font-weight:700;border:none;border-radius:var(--radius-full);cursor:pointer;box-shadow:var(--shadow-md);letter-spacing:.03em;transition:all var(--transition);}
+    .btn-analyze:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--shadow-lg);filter:brightness(1.08);}
+    .btn-analyze:active:not(:disabled){transform:translateY(0);}
+    .btn-analyze:disabled{opacity:.4;cursor:not-allowed;}
+    .stats-row{display:none;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-bottom:var(--space-8);}
+    .stat-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:var(--text-xl);font-weight:700;line-height:1;margin-bottom:var(--space-1);}
+    .stat-number.red{color:var(--color-primary);}
+    .stat-number.green{color:var(--color-success);}
+    .stat-number.blue{color:var(--color-secondary);}
+    .stat-label{font-size:var(--text-xs);color:var(--color-text-muted);}
+    .results-section{display:none;}
+    .results-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-4);margin-bottom:var(--space-5);}
+    .results-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;}
+    .results-title span{color:var(--color-primary);}
+    .search-bar{display:flex;align-items:center;gap:var(--space-2);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:var(--space-2) var(--space-4);transition:all var(--transition);}
+    .search-bar:focus-within{border-color:var(--color-primary);}
+    .search-bar input{border:none;background:none;outline:none;font-size:var(--text-sm);color:var(--color-text);width:200px;font-family:var(--font-body);}
+    .table-wrap{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;}
+    table{width:100%;border-collapse:collapse;}
+    thead{background:var(--color-surface-offset);}
+    th{padding:var(--space-3) var(--space-5);text-align:left;font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-muted);}
+    td{padding:var(--space-3) var(--space-5);vertical-align:middle;}
+    tr{border-bottom:1px solid var(--color-divider);}
+    tr:last-child{border-bottom:none;}
+    tbody tr:hover{background:var(--color-surface-2);}
+    .username-cell{display:flex;align-items:center;gap:var(--space-3);}
+    .avatar-placeholder{width:36px;height:36px;border-radius:var(--radius-full);flex-shrink:0;background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));display:flex;align-items:center;justify-content:center;color:#fff;font-size:var(--text-sm);font-weight:700;}
+    .username-wrap .uname{font-weight:600;font-size:var(--text-sm);}
+    .username-wrap .ulink{font-size:var(--text-xs);color:var(--color-text-muted);text-decoration:none;}
+    .username-wrap .ulink:hover{color:var(--color-primary);}
+    .row-num{font-size:var(--text-xs);color:var(--color-text-faint);font-weight:500;}
+    .fdate{font-size:var(--text-xs);color:var(--color-text-muted);}
+    .btn-visit{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;background:var(--color-primary-highlight);color:var(--color-primary);font-size:var(--text-xs);font-weight:600;border-radius:var(--radius-full);text-decoration:none;}
+    .btn-visit:hover{background:var(--color-primary);color:#fff;}
+    .pagination{display:flex;align-items:center;justify-content:center;gap:var(--space-2);padding:var(--space-5);flex-wrap:wrap;}
+    .page-btn{min-width:36px;height:36px;padding:0 var(--space-3);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-sm);cursor:pointer;color:var(--color-text-muted);transition:all var(--transition);font-family:var(--font-body);}
+    .page-btn:hover:not(:disabled){border-color:var(--color-primary);color:var(--color-primary);}
+    .page-btn.active{background:var(--color-primary);border-color:var(--color-primary);color:#fff;}
+    .page-btn:disabled{opacity:.35;cursor:not-allowed;}
+    .btn-export{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-5);background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:600;color:var(--color-text);cursor:pointer;font-family:var(--font-body);}
+    .btn-export:hover{background:var(--color-surface-2);border-color:var(--color-text-muted);}
+    .empty-state{padding:var(--space-16) var(--space-8);text-align:center;color:var(--color-text-muted);}
+    .empty-state-icon{font-size:3rem;margin-bottom:var(--space-4);}
+    .empty-state h3{font-size:var(--text-base);font-weight:600;color:var(--color-text);margin-bottom:var(--space-2);}
+    .empty-state p{font-size:var(--text-sm);max-width:36ch;margin:0 auto;}
+    .toast{position:fixed;bottom:var(--space-6);right:var(--space-6);z-index:999;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);box-shadow:var(--shadow-lg);font-size:var(--text-sm);display:flex;align-items:center;gap:var(--space-3);transform:translateY(120%);transition:transform .3s cubic-bezier(.16,1,.3,1);max-width:320px;}
+    .toast.show{transform:translateY(0);}
+    .toast.error{border-color:#e05555;}
+    .toast.success{border-color:var(--color-success);}
+    .footer{text-align:center;padding:var(--space-8) var(--space-6);border-top:1px solid var(--color-divider);color:var(--color-text-faint);font-size:var(--text-xs);}
+    .howto{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-8);margin-bottom:var(--space-8);}
+    .howto h2{font-family:var(--font-display);font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-5);}
+    .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-5);}
+    .step{display:flex;gap:var(--space-4);align-items:flex-start;}
+    .step-num{width:32px;height:32px;flex-shrink:0;background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));color:#fff;font-size:var(--text-sm);font-weight:700;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;}
+    .step-text h4{font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1);}
+    .step-text p{font-size:var(--text-xs);color:var(--color-text-muted);}
+    .step-text code{font-family:monospace;font-size:.88em;background:var(--color-surface-offset);padding:1px 4px;border-radius:3px;}
+    @media(max-width:480px){main{padding:var(--space-8) var(--space-4);}.stats-row{grid-template-columns:1fr;}th:nth-child(3),td:nth-child(3){display:none;}.search-bar input{width:130px;}.header{padding:var(--space-3) var(--space-4);}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="logo">
+        <rect width="32" height="32" rx="8" fill="url(#ig-g)"/>
+        <circle cx="16" cy="16" r="6.5" stroke="white" stroke-width="2"/>
+        <circle cx="23" cy="9" r="1.5" fill="white"/>
+        <defs><linearGradient id="ig-g" x1="0" y1="32" x2="32" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#f09433"/><stop offset=".25" stop-color="#e6683c"/><stop offset=".5" stop-color="#dc2743"/><stop offset=".75" stop-color="#cc2366"/><stop offset="1" stop-color="#bc1888"/></linearGradient></defs>
+      </svg>
+      <span class="logo-title">Unfollow<span>Checker</span></span>
+    </a>
+    <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark/light mode"></button>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <div class="hero-badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      100% Lokal &amp; Privat
+    </div>
+    <h1>Siapa yang <span class="gradient">Tidak Balik Follow</span><br>Kamu di Instagram?</h1>
+    <p>Upload file data Instagram kamu dari export resmi &mdash; semua diproses di browser, tidak ada data yang dikirim ke server manapun.</p>
+  </section>
+  <div class="howto">
+    <h2>&#x1F4E5; Cara Export Data Instagram</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-text"><h4>Buka Instagram</h4><p>Masuk ke <strong>Pengaturan &rarr; Akun &rarr; Pusat Akun</strong></p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text"><h4>Unduh Informasi</h4><p>Pilih <strong>"Unduh informasi Anda"</strong> &rarr; format <strong>HTML</strong> &rarr; tunggu email</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text"><h4>Ekstrak ZIP</h4><p>Buka folder <code>followers_and_following/</code> di dalam ZIP</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text"><h4>Upload di Sini</h4><p>Upload <code>followers_1.html</code> dan <code>following.html</code> di bawah ini</p></div></div>
+    </div>
+  </div>
+  <div class="upload-grid">
+    <label class="upload-card" id="followersCard">
+      <input type="file" id="followersFile" accept=".html,.htm" aria-label="Upload file followers">
+      <div class="upload-icon" id="followersIcon">&#x1F465;</div>
+      <h3>File Followers</h3>
+      <p>Upload <code>followers_1.html</code><br><span style="color:var(--color-text-faint);">(orang yang mengikuti kamu)</span></p>
+      <div class="upload-status" id="followersStatus"></div>
+    </label>
+    <label class="upload-card" id="followingCard">
+      <input type="file" id="followingFile" accept=".html,.htm" aria-label="Upload file following">
+      <div class="upload-icon" id="followingIcon">&#x27A1;&#xFE0F;</div>
+      <h3>File Following</h3>
+      <p>Upload <code>following.html</code><br><span style="color:var(--color-text-faint);">(akun yang kamu ikuti)</span></p>
+      <div class="upload-status" id="followingStatus"></div>
+    </label>
+  </div>
+  <button class="btn-analyze" id="analyzeBtn" disabled onclick="analyze()">&#x1F50D; Analisis Sekarang</button>
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="stat-number blue" id="statFollowing">&mdash;</div><div class="stat-label">Akun yang Kamu Ikuti</div></div>
+    <div class="stat-card"><div class="stat-number green" id="statFollowers">&mdash;</div><div class="stat-label">Followers Kamu</div></div>
+    <div class="stat-card"><div class="stat-number red" id="statNotBack">&mdash;</div><div class="stat-label">Tidak Balik Follow</div></div>
+  </div>
+  <div class="results-section" id="resultsSection">
+    <div class="results-header">
+      <div class="results-title">Tidak Follow Balik <span id="resultCount"></span></div>
+      <div style="display:flex;gap:var(--space-3);align-items:center;flex-wrap:wrap;">
+        <div class="search-bar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="searchInput" placeholder="Cari username..." oninput="filterAndRender()" aria-label="Cari username">
+        </div>
+        <button class="btn-export" onclick="exportCSV()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Username</th><th>Diikuti Sejak</th><th>Aksi</th></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</main>
+<footer class="footer">
+  <p>&#x1F512; Semua data diproses 100% di browser kamu. Tidak ada data yang diunggah ke server manapun.</p>
+  <p style="margin-top:var(--space-2);">UnfollowChecker &mdash; Made with &#x2764;&#xFE0F; for Instagram users</p>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){var t=document.querySelector("[data-theme-toggle]"),r=document.documentElement;var d=r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");r.setAttribute("data-theme",d);var sun='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';var moon='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';function setIcon(m){t.innerHTML=m==="dark"?sun:moon;}setIcon(d);t.addEventListener("click",function(){d=d==="dark"?"light":"dark";r.setAttribute("data-theme",d);setIcon(d);});})();
+var followersData=null,followingData=null,unfollowerList=[],filteredList=[];
+var PER_PAGE=25,currentPage=1;
+function parseInstagramHTML(html){var parser=new DOMParser(),doc=parser.parseFromString(html,"text/html"),results=[];var links=doc.querySelectorAll("a[href*='instagram.com/_u/']");if(links.length>0){links.forEach(function(a){var href=a.getAttribute("href"),match=href.match(/instagram\.com\/_u\/([^/?#]+)/);if(match){var username=match[1].trim().toLowerCase(),date="";var parent=a.closest("div")||a.parentElement;if(parent){var m=parent.textContent.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i);if(m)date=m[0];}if(username)results.push({username:username,date:date});}});return results;}var body=doc.body.innerText||doc.body.textContent;var lines=body.split("\n").map(function(l){return l.trim();}).filter(function(l){return l.length>0;});var dateRx=/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i;for(var i=0;i<lines.length;i++){var line=lines[i];if(dateRx.test(line)||/^\d{1,2}:\d{2}/.test(line))continue;if(line.length<=30&&!/\s/.test(line)&&!/^https?:/.test(line)&&line.length>0){var uname=line.toLowerCase(),date="";if(i+1<lines.length){var nxt=lines[i+1],m2=nxt.match(dateRx);if(m2){date=m2[0];i++;}}results.push({username:uname,date:date});}}return results;}
+document.getElementById("followersFile").addEventListener("change",async function(e){var file=e.target.files[0];if(!file)return;var html=await file.text();followersData=parseInstagramHTML(html);document.getElementById("followersCard").classList.add("uploaded");document.getElementById("followersIcon").textContent="\u2705";document.getElementById("followersStatus").textContent=followersData.length+" followers terdeteksi";checkReady();});
+document.getElementById("followingFile").addEventListener("change",async function(e){var file=e.target.files[0];if(!file)return;var html=await file.text();followingData=parseInstagramHTML(html);document.getElementById("followingCard").classList.add("uploaded");document.getElementById("followingIcon").textContent="\u2705";document.getElementById("followingStatus").textContent=followingData.length+" following terdeteksi";checkReady();});
+["followersCard","followingCard"].forEach(function(id){var card=document.getElementById(id);card.addEventListener("dragover",function(e){e.preventDefault();card.classList.add("dragover");});card.addEventListener("dragleave",function(){card.classList.remove("dragover");});card.addEventListener("drop",function(e){e.preventDefault();card.classList.remove("dragover");});});
+function checkReady(){document.getElementById("analyzeBtn").disabled=!(followersData&&followingData);}
+function analyze(){if(!followersData||!followingData)return;var fset=new Set(followersData.map(function(f){return f.username;}));unfollowerList=followingData.filter(function(f){return !fset.has(f.username);});document.getElementById("statFollowing").textContent=followingData.length.toLocaleString("id");document.getElementById("statFollowers").textContent=followersData.length.toLocaleString("id");document.getElementById("statNotBack").textContent=unfollowerList.length.toLocaleString("id");document.getElementById("statsRow").style.display="grid";document.getElementById("resultsSection").style.display="block";filteredList=unfollowerList.slice();currentPage=1;renderTable();showToast("Ditemukan "+unfollowerList.length+" akun yang tidak balik follow","success");setTimeout(function(){document.getElementById("statsRow").scrollIntoView({behavior:"smooth",block:"start"});},100);}
+function filterAndRender(){var q=document.getElementById("searchInput").value.toLowerCase().trim();filteredList=q?unfollowerList.filter(function(u){return u.username.includes(q);}):unfollowerList.slice();currentPage=1;renderTable();}
+function renderTable(){var tbody=document.getElementById("tableBody"),total=filteredList.length;document.getElementById("resultCount").textContent="("+total.toLocaleString("id")+")";if(total===0){tbody.innerHTML='<tr><td colspan="4"><div class="empty-state"><div class="empty-state-icon">&#x1F50D;</div><h3>Tidak ada hasil</h3><p>Coba kata kunci yang berbeda.</p></div></td></tr>';document.getElementById("pagination").innerHTML="";return;}var start=(currentPage-1)*PER_PAGE,page=filteredList.slice(start,start+PER_PAGE),off=start;tbody.innerHTML=page.map(function(u,i){var init=u.username[0].toUpperCase();return '<tr><td class="row-num">'+(off+i+1)+'</td><td><div class="username-cell"><div class="avatar-placeholder">'+init+'</div><div class="username-wrap"><div class="uname">@'+u.username+'</div><a class="ulink" href="https://www.instagram.com/'+u.username+'/" target="_blank" rel="noopener noreferrer">instagram.com/'+u.username+'</a></div></div></td><td class="fdate">'+(u.date||"&mdash;")+'</td><td><a class="btn-visit" href="https://www.instagram.com/'+u.username+'/" target="_blank" rel="noopener noreferrer">Buka &#x2197;</a></td></tr>';}).join("");renderPagination(total);}
+function renderPagination(total){var tp=Math.ceil(total/PER_PAGE),pag=document.getElementById("pagination");if(tp<=1){pag.innerHTML="";return;}var h='<button class="page-btn" onclick="goPage('+(currentPage-1)+')" '+(currentPage===1?"disabled":"")+'>\u2039</button>';var range=[];for(var p=1;p<=tp;p++){if(p===1||p===tp||(p>=currentPage-2&&p<=currentPage+2))range.push(p);else if(range[range.length-1]!=="...")range.push("...");}range.forEach(function(p){if(p==="...")h+='<button class="page-btn" disabled>&hellip;</button>';else h+='<button class="page-btn '+(p===currentPage?"active":"")+' " onclick="goPage('+p+')">'+p+'</button>';});h+='<button class="page-btn" onclick="goPage('+(currentPage+1)+')" '+(currentPage===tp?"disabled":"")+'>\u203A</button>';pag.innerHTML=h;}
+function goPage(p){var tp=Math.ceil(filteredList.length/PER_PAGE);if(p<1||p>tp)return;currentPage=p;renderTable();document.getElementById("resultsSection").scrollIntoView({behavior:"smooth",block:"start"});}
+function exportCSV(){if(!filteredList.length)return;var rows=[["No","Username","URL","Diikuti Sejak"]];filteredList.forEach(function(u,i){rows.push([i+1,u.username,"https://www.instagram.com/"+u.username+"/",u.date||""]);});var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(",");}).join("\n");var blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="ig-unfollowers-"+new Date().toISOString().slice(0,10)+".csv";a.click();showToast("CSV berhasil diunduh!","success");}
+function showToast(msg,type){var t=document.getElementById("toast");var icon=type==="success"?"\u2705":type==="error"?"\u274C":"\u2139\uFE0F";t.className="toast "+type;t.innerHTML="<span>"+icon+"</span><span>"+msg+"</span>";t.classList.add("show");setTimeout(function(){t.classList.remove("show");},4000);}
+</script>
+</body>
+</html>
