@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Unfollow Checker · Instagram</title>
+<meta name="description" content="Cek siapa yang tidak follow balik kamu di Instagram. Privat, gratis, 100% di browser.">
+<title>UnfollowMe — Instagram Unfollow Checker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -30,7 +31,6 @@
   --surf:#fff;--surf2:#f8f6ff;--surf3:#f0edff;
   --bdr:rgba(139,92,246,.15);--bdr2:rgba(139,92,246,.25);
   --txt:#1e1b4b;--txtm:#6b7280;--txtf:#9ca3af;
-  --glow:0 0 40px rgba(139,92,246,.1),0 0 80px rgba(236,72,153,.06);
   --shadow:0 2px 8px rgba(139,92,246,.1),0 4px 16px rgba(0,0,0,.06);
   --shadow-lg:0 4px 24px rgba(139,92,246,.15),0 12px 40px rgba(0,0,0,.08);
 }
@@ -57,100 +57,67 @@ img,svg{display:block;max-width:100%;}
   position:sticky;top:0;z-index:100;
   padding:12px 20px;
   padding-top:max(12px,env(safe-area-inset-top));
-  background:rgba(8,8,12,.7);
-  backdrop-filter:blur(20px) saturate(180%);
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  background:rgba(8,8,12,.75);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
   border-bottom:1px solid var(--bdr);
 }
-[data-theme="light"] .nav{background:rgba(245,243,255,.8);}
+[data-theme="light"] .nav{background:rgba(245,243,255,.85);}
 .nav-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
 .logo-icon{
-  width:34px;height:34px;border-radius:10px;
+  width:32px;height:32px;border-radius:9px;
   background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 2px 12px rgba(240,69,122,.4);
+  flex-shrink:0;
 }
-.logo-title{font-size:16px;font-weight:800;letter-spacing:-.3px;}
+.logo-title{font-size:17px;font-weight:800;letter-spacing:-.4px;}
 .logo-title em{font-style:normal;background:linear-gradient(90deg,var(--pink2),var(--purple2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.nav-right{display:flex;align-items:center;gap:8px;}
 .theme-btn{
   width:36px;height:36px;border-radius:var(--rfull);
   background:var(--surf2);border:1px solid var(--bdr);
   display:flex;align-items:center;justify-content:center;
-  color:var(--txtm);font-size:16px;
+  color:var(--txtm);
 }
 .theme-btn:hover{background:var(--surf3);color:var(--txt);}
 
 /* ── MAIN ─────────────────────────────────────── */
-main{max-width:480px;margin:0 auto;padding:28px 16px 100px;}
+main{max-width:480px;margin:0 auto;padding:24px 16px 100px;}
 
 /* ── HERO ─────────────────────────────────────── */
-.hero{text-align:center;margin-bottom:28px;padding:0 4px;}
-.hero-chip{
+.hero{text-align:center;margin-bottom:24px;padding:0 4px;}
+.hero-badge{
   display:inline-flex;align-items:center;gap:6px;
-  padding:5px 12px;
+  padding:4px 12px;
   background:linear-gradient(135deg,rgba(168,85,247,.15),rgba(240,69,122,.1));
   border:1px solid rgba(168,85,247,.3);
   border-radius:var(--rfull);
-  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--purple2);margin-bottom:16px;
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--purple2);margin-bottom:14px;
 }
 .hero h1{
   font-size:clamp(26px,7vw,34px);font-weight:800;line-height:1.15;
-  letter-spacing:-.5px;margin-bottom:10px;
-  text-wrap:balance;
+  letter-spacing:-.5px;margin-bottom:10px;text-wrap:balance;
 }
 .hero h1 .g{
   background:linear-gradient(120deg,var(--pink),var(--purple),var(--blue));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.hero p{font-size:14px;color:var(--txtm);max-width:36ch;margin:0 auto;line-height:1.7;}
+.hero p{font-size:13px;color:var(--txtm);max-width:34ch;margin:0 auto;line-height:1.7;}
 
-/* ── STEPS CARD ───────────────────────────────── */
-.steps-card{
-  background:var(--surf);border:1px solid var(--bdr);
-  border-radius:var(--r20);padding:20px;
-  margin-bottom:20px;
-  box-shadow:var(--shadow);
+/* ── UPLOAD SECTION ───────────────────────────── */
+.upload-section{margin-bottom:12px;}
+.section-label{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--txtm);margin-bottom:10px;display:flex;align-items:center;gap:6px;
 }
-.card-label{
-  display:flex;align-items:center;gap:8px;
-  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
-  color:var(--txtm);margin-bottom:16px;
-}
-.steps-list{display:flex;flex-direction:column;gap:0;}
-.step-item{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:10px 0;
-  border-bottom:1px solid var(--bdr);
-}
-.step-item:last-child{border-bottom:none;padding-bottom:0;}
-.step-item:first-child{padding-top:0;}
-.step-dot{
-  width:28px;height:28px;flex-shrink:0;
-  border-radius:var(--rfull);
-  background:linear-gradient(135deg,var(--pink),var(--purple));
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:800;color:#fff;
-  box-shadow:0 2px 8px rgba(240,69,122,.3);
-}
-.step-body h4{font-size:13px;font-weight:700;margin-bottom:2px;}
-.step-body p{font-size:12px;color:var(--txtm);line-height:1.6;}
-.step-body code{
-  font-family:ui-monospace,monospace;font-size:11px;
-  background:var(--surf3);color:var(--purple2);
-  padding:1px 5px;border-radius:4px;
-}
-
-/* ── UPLOAD CARDS ─────────────────────────────── */
-.upload-section{margin-bottom:16px;}
-.upload-pair{display:flex;flex-direction:column;gap:12px;}
+.upload-pair{display:flex;flex-direction:column;gap:10px;}
 .upload-card{
   background:var(--surf);
   border:1.5px dashed var(--bdr2);
   border-radius:var(--r20);
-  padding:20px 16px;
+  padding:18px 16px;
   cursor:pointer;display:block;
   position:relative;overflow:hidden;
   transition:all var(--tr);
@@ -158,57 +125,44 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 100px;}
 }
 .upload-card::before{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(168,85,247,.05),rgba(240,69,122,.03));
-  opacity:0;transition:opacity var(--tr);
+  background:linear-gradient(135deg,rgba(168,85,247,.06),rgba(240,69,122,.03));
+  opacity:0;transition:opacity var(--tr);pointer-events:none;
 }
 .upload-card:hover::before,.upload-card.dragover::before{opacity:1;}
 .upload-card:hover,.upload-card.dragover{
-  border-color:rgba(168,85,247,.5);
+  border-color:rgba(168,85,247,.45);
   box-shadow:0 0 0 3px rgba(168,85,247,.1),var(--shadow);
 }
 .upload-card.uploaded{
   border-style:solid;border-color:rgba(34,197,94,.4);
-  background:linear-gradient(135deg,rgba(34,197,94,.06),var(--surf));
+  background:linear-gradient(135deg,rgba(34,197,94,.05),var(--surf));
 }
 .upload-card input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
 .upload-inner{display:flex;align-items:center;gap:14px;}
-.upload-thumb{
-  width:48px;height:48px;flex-shrink:0;
-  border-radius:var(--r12);
-  background:var(--surf2);
-  border:1px solid var(--bdr);
+.upload-icon{
+  width:44px;height:44px;flex-shrink:0;border-radius:var(--r12);
+  background:var(--surf2);border:1px solid var(--bdr);
   display:flex;align-items:center;justify-content:center;
-  font-size:22px;
-  transition:all var(--tr);
+  color:var(--txtm);transition:all var(--tr);
 }
-.upload-card.uploaded .upload-thumb{
-  background:rgba(34,197,94,.15);
-  border-color:rgba(34,197,94,.3);
+.upload-card.uploaded .upload-icon{
+  background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.3);color:var(--green);
 }
 .upload-info{flex:1;min-width:0;}
 .upload-info h3{font-size:14px;font-weight:700;margin-bottom:2px;}
-.upload-info p{font-size:12px;color:var(--txtm);}
-.upload-info code{
-  font-family:ui-monospace,monospace;font-size:11px;
-  background:var(--surf3);color:var(--pink);padding:1px 4px;border-radius:3px;
-}
-.upload-count{
-  font-size:11px;font-weight:700;color:var(--green);
-  margin-top:4px;display:none;
-}
+.upload-info .fname{font-size:11px;color:var(--txtm);font-family:ui-monospace,monospace;}
+.upload-count{font-size:11px;font-weight:600;color:var(--green);margin-top:3px;display:none;}
 .upload-card.uploaded .upload-count{display:block;}
-.upload-arrow{
-  width:32px;height:32px;flex-shrink:0;
-  border-radius:var(--rfull);background:var(--surf2);
-  border:1px solid var(--bdr);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--txtf);
+.upload-caret{
+  width:30px;height:30px;flex-shrink:0;border-radius:var(--rfull);
+  background:var(--surf2);border:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:center;color:var(--txtf);
 }
-.upload-card.uploaded .upload-arrow{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.3);color:var(--green);}
+.upload-card.uploaded .upload-caret{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.3);color:var(--green);}
 
 /* ── ANALYZE BTN ──────────────────────────────── */
 .btn-analyze{
-  width:100%;padding:16px;
+  width:100%;padding:15px;
   background:linear-gradient(135deg,var(--pink),var(--purple));
   color:#fff;font-size:15px;font-weight:800;letter-spacing:.01em;
   border-radius:var(--r16);
@@ -216,38 +170,24 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 100px;}
   position:relative;overflow:hidden;
   margin-bottom:24px;
 }
-.btn-analyze::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.12),transparent);
-}
-.btn-analyze:hover:not(:disabled){
-  transform:translateY(-1px);
-  box-shadow:0 8px 28px rgba(168,85,247,.45),0 4px 12px rgba(240,69,122,.3);
-}
+.btn-analyze::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent);}
+.btn-analyze:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 28px rgba(168,85,247,.45),0 4px 12px rgba(240,69,122,.3);}
 .btn-analyze:active:not(:disabled){transform:translateY(0);}
-.btn-analyze:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;}
+.btn-analyze:disabled{opacity:.3;cursor:not-allowed;box-shadow:none;}
 
 /* ── STATS ────────────────────────────────────── */
-.stats-grid{
-  display:none;grid-template-columns:repeat(3,1fr);
-  gap:10px;margin-bottom:24px;
-}
+.stats-grid{display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
 .stat-card{
   background:var(--surf);border:1px solid var(--bdr);
   border-radius:var(--r16);padding:14px 10px;
   text-align:center;box-shadow:var(--shadow);
   position:relative;overflow:hidden;
 }
-.stat-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .stat-card.c-blue::before{background:linear-gradient(90deg,var(--blue),var(--purple));}
 .stat-card.c-green::before{background:linear-gradient(90deg,var(--green),var(--blue));}
 .stat-card.c-red::before{background:linear-gradient(90deg,var(--pink),var(--orange));}
-.stat-num{
-  font-size:clamp(18px,5vw,24px);font-weight:800;
-  line-height:1;margin-bottom:4px;letter-spacing:-.5px;
-}
+.stat-num{font-size:clamp(18px,5vw,24px);font-weight:800;line-height:1;margin-bottom:4px;letter-spacing:-.5px;}
 .stat-card.c-blue .stat-num{color:var(--blue);}
 .stat-card.c-green .stat-num{color:var(--green);}
 .stat-card.c-red .stat-num{background:linear-gradient(135deg,var(--pink),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -255,37 +195,27 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 100px;}
 
 /* ── RESULTS ──────────────────────────────────── */
 .results-section{display:none;}
-.results-top{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:10px;margin-bottom:14px;flex-wrap:wrap;
-}
-.results-title{font-size:16px;font-weight:800;}
-.results-title span{
-  background:linear-gradient(90deg,var(--pink),var(--purple));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
+.results-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.results-title{font-size:15px;font-weight:800;}
+.results-title span{background:linear-gradient(90deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .search-box{
   display:flex;align-items:center;gap:8px;
   background:var(--surf);border:1px solid var(--bdr);
-  border-radius:var(--r12);padding:8px 14px;
+  border-radius:var(--r12);padding:9px 14px;
   width:100%;margin-bottom:10px;
 }
 .search-box:focus-within{border-color:rgba(168,85,247,.4);box-shadow:0 0 0 3px rgba(168,85,247,.08);}
-.search-box input{
-  flex:1;border:none;background:none;outline:none;
-  font-size:14px;color:var(--txt);font-family:var(--f);
-}
+.search-box input{flex:1;border:none;background:none;outline:none;font-size:14px;color:var(--txt);font-family:var(--f);}
 .search-box input::placeholder{color:var(--txtf);}
 .btn-export{
   display:flex;align-items:center;gap:6px;
   padding:8px 14px;
   background:var(--surf);border:1px solid var(--bdr);
-  border-radius:var(--r12);font-size:12px;font-weight:700;
-  color:var(--txtm);
+  border-radius:var(--r12);font-size:12px;font-weight:700;color:var(--txtm);
 }
 .btn-export:hover{border-color:var(--bdr2);color:var(--txt);}
 
-/* ── LIST (mobile card-style) ─────────────────── */
+/* ── USER LIST ────────────────────────────────── */
 .user-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .user-item{
   background:var(--surf);border:1px solid var(--bdr);
@@ -294,7 +224,7 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 100px;}
   animation:fadeUp .25s ease both;
   box-shadow:var(--shadow);
 }
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 .user-num{font-size:11px;color:var(--txtf);font-weight:700;min-width:22px;text-align:center;}
 .user-avatar{
   width:42px;height:42px;border-radius:var(--rfull);flex-shrink:0;
@@ -307,12 +237,11 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 100px;}
 .user-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .user-date{font-size:11px;color:var(--txtm);margin-top:1px;}
 .user-open{
-  flex-shrink:0;
-  width:36px;height:36px;border-radius:var(--rfull);
-  background:linear-gradient(135deg,rgba(240,69,122,.15),rgba(168,85,247,.1));
-  border:1px solid rgba(240,69,122,.25);
+  flex-shrink:0;width:36px;height:36px;border-radius:var(--rfull);
+  background:linear-gradient(135deg,rgba(240,69,122,.12),rgba(168,85,247,.08));
+  border:1px solid rgba(240,69,122,.2);
   display:flex;align-items:center;justify-content:center;
-  color:var(--pink);text-decoration:none;font-size:15px;
+  color:var(--pink);text-decoration:none;
 }
 .user-open:hover{background:var(--pink);color:#fff;border-color:var(--pink);}
 
@@ -328,15 +257,86 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 100px;}
 .pg-btn.on{background:linear-gradient(135deg,var(--pink),var(--purple));border-color:transparent;color:#fff;box-shadow:0 2px 10px rgba(168,85,247,.3);}
 .pg-btn:disabled{opacity:.3;cursor:default;}
 
-/* ── EMPTY ────────────────────────────────────── */
+/* ── EMPTY STATE ──────────────────────────────── */
 .empty{
   padding:48px 24px;text-align:center;
   background:var(--surf);border:1px solid var(--bdr);
   border-radius:var(--r20);box-shadow:var(--shadow);
 }
-.empty-ico{font-size:40px;margin-bottom:12px;}
+.empty-ico{
+  width:48px;height:48px;border-radius:var(--r16);
+  background:var(--surf2);border:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;color:var(--txtf);
+}
 .empty h3{font-size:15px;font-weight:700;margin-bottom:6px;}
 .empty p{font-size:13px;color:var(--txtm);}
+
+/* ── ACCORDION ────────────────────────────────── */
+.accordion{margin-bottom:10px;}
+.accordion-item{
+  background:var(--surf);border:1px solid var(--bdr);
+  border-radius:var(--r16);overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.accordion-item+.accordion-item{margin-top:8px;}
+.accordion-trigger{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:15px 16px;
+  text-align:left;font-size:13px;font-weight:700;color:var(--txt);
+  font-family:var(--f);
+}
+.accordion-trigger:hover{background:var(--surf2);}
+.accordion-left{display:flex;align-items:center;gap:10px;}
+.accordion-icon{
+  width:30px;height:30px;border-radius:var(--r8);
+  background:var(--surf2);border:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--txtm);flex-shrink:0;
+}
+.accordion-chevron{color:var(--txtf);transition:transform var(--tr);flex-shrink:0;}
+.accordion-item.open .accordion-chevron{transform:rotate(180deg);}
+.accordion-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s cubic-bezier(.16,1,.3,1);
+}
+.accordion-item.open .accordion-body{max-height:600px;}
+.accordion-content{padding:0 16px 16px;}
+
+/* ── HOW-TO STEPS ─────────────────────────────── */
+.how-steps{display:flex;flex-direction:column;gap:0;}
+.how-step{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid var(--bdr);
+}
+.how-step:last-child{border-bottom:none;padding-bottom:0;}
+.how-step:first-child{padding-top:0;}
+.how-num{
+  width:26px;height:26px;flex-shrink:0;border-radius:var(--rfull);
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#fff;
+  box-shadow:0 2px 8px rgba(240,69,122,.3);
+}
+.how-body h4{font-size:13px;font-weight:700;margin-bottom:2px;}
+.how-body p{font-size:12px;color:var(--txtm);line-height:1.6;}
+.how-body code{
+  font-family:ui-monospace,monospace;font-size:11px;
+  background:var(--surf3);color:var(--purple2);
+  padding:1px 5px;border-radius:4px;
+}
+
+/* ── T&C LIST ─────────────────────────────────── */
+.tnc-list{display:flex;flex-direction:column;gap:8px;}
+.tnc-item{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:12px;color:var(--txtm);line-height:1.6;
+}
+.tnc-dot{
+  width:5px;height:5px;border-radius:var(--rfull);
+  background:var(--bdr2);flex-shrink:0;margin-top:7px;
+}
 
 /* ── TOAST ────────────────────────────────────── */
 .toast{
@@ -360,112 +360,96 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 100px;}
   text-align:center;padding:20px 16px;
   padding-bottom:max(20px,env(safe-area-inset-bottom));
   border-top:1px solid var(--bdr);
-  font-size:11px;color:var(--txtf);
+  font-size:11px;color:var(--txtf);line-height:1.8;
 }
 
-/* ── DESKTOP tweak ────────────────────────────── */
+/* ── DESKTOP ──────────────────────────────────── */
 @media(min-width:520px){
-  main{padding:36px 24px 80px;}
+  main{padding:32px 24px 80px;}
   .upload-pair{flex-direction:row;}
   .upload-pair .upload-card{flex:1;}
 }
 </style>
 </head>
 <body>
+
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
     <a class="logo" href="#">
       <div class="logo-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <rect x="2" y="2" width="20" height="20" rx="6" stroke="white" stroke-width="2"/>
           <circle cx="12" cy="12" r="4" stroke="white" stroke-width="2"/>
           <circle cx="17.5" cy="6.5" r="1.5" fill="white"/>
         </svg>
       </div>
-      <span class="logo-title">Unfollow<em>Checker</em></span>
+      <span class="logo-title">Unfollow<em>Me</em></span>
     </a>
-    <div class="nav-right">
-      <button class="theme-btn" id="themeBtn" aria-label="Toggle tema"></button>
-    </div>
+    <button class="theme-btn" id="themeBtn" aria-label="Ganti tema"></button>
   </div>
 </nav>
 
 <main>
+
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-chip">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <div class="hero-badge">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
       100% Privat &amp; Gratis
     </div>
-    <h1>Cek siapa yang<br><span class="g">tidak balik follow</span><br>kamu di Instagram</h1>
-    <p>Upload file export resmi Instagram. Semua diproses langsung di browser kamu.</p>
+    <h1>Siapa yang tidak<br><span class="g">follow balik</span> kamu?</h1>
+    <p>Upload file export resmi Instagram. Semua diproses di browser — tidak ada data yang dikirim.</p>
   </section>
-
-  <!-- STEPS -->
-  <div class="steps-card">
-    <div class="card-label">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      Cara Dapat File
-    </div>
-    <div class="steps-list">
-      <div class="step-item">
-        <div class="step-dot">1</div>
-        <div class="step-body"><h4>Buka Instagram</h4><p>Pengaturan → Akun → Pusat Akun</p></div>
-      </div>
-      <div class="step-item">
-        <div class="step-dot">2</div>
-        <div class="step-body"><h4>Unduh Informasi Anda</h4><p>Pilih format <strong>HTML</strong> → tunggu email dari Instagram</p></div>
-      </div>
-      <div class="step-item">
-        <div class="step-dot">3</div>
-        <div class="step-body"><h4>Ekstrak ZIP</h4><p>Buka folder <code>followers_and_following/</code></p></div>
-      </div>
-      <div class="step-item">
-        <div class="step-dot">4</div>
-        <div class="step-body"><h4>Upload ke sini</h4><p>File <code>followers_1.html</code> dan <code>following.html</code></p></div>
-      </div>
-    </div>
-  </div>
 
   <!-- UPLOAD -->
   <div class="upload-section">
+    <div class="section-label">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Upload File
+    </div>
     <div class="upload-pair">
+
       <label class="upload-card" id="fwrCard">
-        <input type="file" id="fwrFile" accept=".html,.htm">
+        <input type="file" id="fwrFile" accept=".html,.htm" aria-label="Upload file followers">
         <div class="upload-inner">
-          <div class="upload-thumb" id="fwrThumb">👥</div>
+          <div class="upload-icon" id="fwrIcon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
           <div class="upload-info">
             <h3>File Followers</h3>
-            <p><code>followers_1.html</code></p>
+            <div class="fname">followers_1.html</div>
             <div class="upload-count" id="fwrCount"></div>
           </div>
-          <div class="upload-arrow" id="fwrArrow">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          <div class="upload-caret" id="fwrCaret">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
           </div>
         </div>
       </label>
 
       <label class="upload-card" id="fwgCard">
-        <input type="file" id="fwgFile" accept=".html,.htm">
+        <input type="file" id="fwgFile" accept=".html,.htm" aria-label="Upload file following">
         <div class="upload-inner">
-          <div class="upload-thumb" id="fwgThumb">➡️</div>
+          <div class="upload-icon" id="fwgIcon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          </div>
           <div class="upload-info">
             <h3>File Following</h3>
-            <p><code>following.html</code></p>
+            <div class="fname">following.html</div>
             <div class="upload-count" id="fwgCount"></div>
           </div>
-          <div class="upload-arrow" id="fwgArrow">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          <div class="upload-caret" id="fwgCaret">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
           </div>
         </div>
       </label>
+
     </div>
   </div>
 
   <!-- ANALYZE -->
   <button class="btn-analyze" id="analyzeBtn" disabled onclick="analyze()">
-    🔍 Analisis Sekarang
+    Analisis Sekarang
   </button>
 
   <!-- STATS -->
@@ -489,27 +473,93 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 100px;}
     <div class="results-top">
       <div class="results-title">Tidak Follow Balik <span id="rCount"></span></div>
       <button class="btn-export" onclick="exportCSV()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         CSV
       </button>
     </div>
     <div class="search-box">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="searchInput" placeholder="Cari username..." oninput="filterAndRender()" aria-label="Cari username">
     </div>
     <div class="user-list" id="userList"></div>
     <div class="pagination" id="pagination"></div>
   </div>
+
+  <!-- ACCORDION: CARA PAKAI + T&C -->
+  <div class="accordion">
+
+    <!-- HOW TO -->
+    <div class="accordion-item" id="accHow">
+      <button class="accordion-trigger" onclick="toggleAcc('accHow')" aria-expanded="false">
+        <div class="accordion-left">
+          <div class="accordion-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          Cara Mendapatkan File
+        </div>
+        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <div class="how-steps">
+            <div class="how-step">
+              <div class="how-num">1</div>
+              <div class="how-body"><h4>Buka Instagram</h4><p>Masuk ke Pengaturan → Akun → Pusat Akun</p></div>
+            </div>
+            <div class="how-step">
+              <div class="how-num">2</div>
+              <div class="how-body"><h4>Unduh Informasi Anda</h4><p>Pilih format <strong>HTML</strong>, lalu tunggu email dari Instagram</p></div>
+            </div>
+            <div class="how-step">
+              <div class="how-num">3</div>
+              <div class="how-body"><h4>Ekstrak ZIP</h4><p>Buka folder <code>followers_and_following/</code></p></div>
+            </div>
+            <div class="how-step">
+              <div class="how-num">4</div>
+              <div class="how-body"><h4>Upload ke sini</h4><p>File <code>followers_1.html</code> dan <code>following.html</code></p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- T&C -->
+    <div class="accordion-item" id="accTnc">
+      <button class="accordion-trigger" onclick="toggleAcc('accTnc')" aria-expanded="false">
+        <div class="accordion-left">
+          <div class="accordion-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          Privasi &amp; Ketentuan
+        </div>
+        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-content">
+          <div class="tnc-list">
+            <div class="tnc-item"><div class="tnc-dot"></div><span>Semua file diproses sepenuhnya di browser kamu — tidak ada data yang dikirim ke server mana pun.</span></div>
+            <div class="tnc-item"><div class="tnc-dot"></div><span>Aplikasi ini tidak terafiliasi dengan Instagram atau Meta dalam bentuk apapun.</span></div>
+            <div class="tnc-item"><div class="tnc-dot"></div><span>Hasil analisis bergantung pada data export yang kamu upload; akurasi tidak dijamin 100%.</span></div>
+            <div class="tnc-item"><div class="tnc-dot"></div><span>Gunakan informasi ini secara bijak dan hormati privasi pengguna lain.</span></div>
+            <div class="tnc-item"><div class="tnc-dot"></div><span>Dengan menggunakan aplikasi ini kamu menyetujui ketentuan penggunaan yang berlaku.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /accordion -->
+
 </main>
 
 <footer class="footer">
-  <p>🔒 Semua data hanya diproses di browser — tidak ada yang dikirim ke server</p>
+  <p>UnfollowMe — Data hanya diproses di browser kamu</p>
+  <p style="margin-top:4px">Tidak terafiliasi dengan Instagram / Meta</p>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-// ── THEME ────────────────────────────────────────────────────────────────
+// ── THEME ─────────────────────────────────────────────────────────────────
 (function(){
   var btn=document.getElementById('themeBtn'),html=document.documentElement;
   var d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
@@ -520,13 +570,21 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 100px;}
   btn.onclick=function(){d=d==='dark'?'light':'dark';html.setAttribute('data-theme',d);btn.innerHTML=d==='dark'?S:M;};
 })();
 
-// ── VARS ─────────────────────────────────────────────────────────────────
+// ── ACCORDION ─────────────────────────────────────────────────────────────
+function toggleAcc(id){
+  var el=document.getElementById(id);
+  var isOpen=el.classList.contains('open');
+  el.classList.toggle('open',!isOpen);
+  el.querySelector('.accordion-trigger').setAttribute('aria-expanded',String(!isOpen));
+}
+
+// ── DATA ──────────────────────────────────────────────────────────────────
 var fwrData=null,fwgData=null,unfollowers=[],filtered=[];
 var PER=20,page=1;
 var IG_RX=/^[a-zA-Z0-9._]{1,30}$/;
 var DATE_RX=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i;
 
-// ── PARSER ───────────────────────────────────────────────────────────────
+// ── PARSER ────────────────────────────────────────────────────────────────
 function extractLines(doc){
   var lines=[],walker=doc.createTreeWalker(doc.body,4,null,false),node;
   while((node=walker.nextNode())){
@@ -538,8 +596,6 @@ function extractLines(doc){
 
 function parseIG(html){
   var doc=new DOMParser().parseFromString(html,'text/html'),res=[];
-
-  // Method 1: _u/ links
   var L1=doc.querySelectorAll("a[href*='instagram.com/_u/']");
   if(L1.length>0){
     L1.forEach(function(a){
@@ -552,8 +608,6 @@ function parseIG(html){
     });
     return res;
   }
-
-  // Method 2: plain instagram.com links
   var L2=doc.querySelectorAll("a[href*='instagram.com/']"),ok2=false;
   L2.forEach(function(a){
     var h=a.getAttribute('href')||'';
@@ -568,8 +622,6 @@ function parseIG(html){
     res.push({u:u,d:date});ok2=true;
   });
   if(ok2)return res;
-
-  // Method 3: text nodes (followers_1.html)
   var lines=extractLines(doc);
   for(var i=0;i<lines.length;i++){
     var ln=lines[i];
@@ -579,27 +631,24 @@ function parseIG(html){
     if(/^\d+$/.test(ln))continue;
     if(IG_RX.test(ln)){
       var uname=ln.toLowerCase(),date='';
-      if(i+1<lines.length&&DATE_RX.test(lines[i+1])){
-        var dm2=lines[i+1].match(DATE_RX);if(dm2)date=dm2[0];i++;
-      }
+      if(i+1<lines.length&&DATE_RX.test(lines[i+1])){var dm2=lines[i+1].match(DATE_RX);if(dm2)date=dm2[0];i++;}
       res.push({u:uname,d:date});
     }
   }
   return res;
 }
 
-// ── FILE HANDLERS ─────────────────────────────────────────────────────────
-function setupUpload(inputId,cardId,thumbId,countId,onDone){
+// ── UPLOAD HANDLERS ───────────────────────────────────────────────────────
+function setupUpload(inputId,cardId,iconId,countId,caretId,onDone){
   var inp=document.getElementById(inputId);
   var card=document.getElementById(cardId);
   inp.addEventListener('change',async function(e){
     var f=e.target.files[0];if(!f)return;
     var data=parseIG(await f.text());
-    document.getElementById(thumbId).textContent='✅';
+    document.getElementById(iconId).innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
     document.getElementById(countId).textContent=data.length.toLocaleString('id')+' akun terdeteksi';
     card.classList.add('uploaded');
-    onDone(data);
-    checkReady();
+    onDone(data);checkReady();
   });
   ['dragover','dragleave','drop'].forEach(function(ev){
     card.addEventListener(ev,function(e){
@@ -609,8 +658,8 @@ function setupUpload(inputId,cardId,thumbId,countId,onDone){
   });
 }
 
-setupUpload('fwrFile','fwrCard','fwrThumb','fwrCount',function(d){fwrData=d;});
-setupUpload('fwgFile','fwgCard','fwgThumb','fwgCount',function(d){fwgData=d;});
+setupUpload('fwrFile','fwrCard','fwrIcon','fwrCount','fwrCaret',function(d){fwrData=d;});
+setupUpload('fwgFile','fwgCard','fwgIcon','fwgCount','fwgCaret',function(d){fwgData=d;});
 
 function checkReady(){
   document.getElementById('analyzeBtn').disabled=!(fwrData&&fwgData);
@@ -625,39 +674,38 @@ function analyze(){
   document.getElementById('sNotBack').textContent=unfollowers.length.toLocaleString('id');
   document.getElementById('statsGrid').style.display='grid';
   document.getElementById('resultsSection').style.display='block';
-  filtered=unfollowers.slice();page=1;
-  render();
-  toast('Ditemukan '+unfollowers.length+' akun yang tidak balik follow','ok');
+  filtered=unfollowers.slice();page=1;render();
+  toast('Ditemukan '+unfollowers.length+' akun tidak balik follow','ok');
   setTimeout(function(){document.getElementById('statsGrid').scrollIntoView({behavior:'smooth',block:'start'});},120);
 }
 
-// ── FILTER ────────────────────────────────────────────────────────────────
+// ── FILTER & RENDER ───────────────────────────────────────────────────────
 function filterAndRender(){
   var q=document.getElementById('searchInput').value.toLowerCase().trim();
   filtered=q?unfollowers.filter(function(x){return x.u.includes(q);}):unfollowers.slice();
   page=1;render();
 }
 
-// ── RENDER ────────────────────────────────────────────────────────────────
 function render(){
   var list=document.getElementById('userList'),total=filtered.length;
   document.getElementById('rCount').textContent='('+total.toLocaleString('id')+')';
   if(!total){
-    list.innerHTML='<div class="empty"><div class="empty-ico">🔍</div><h3>Tidak ada hasil</h3><p>Coba kata kunci lain</p></div>';
-    document.getElementById('pagination').innerHTML='';
-    return;
+    list.innerHTML='<div class="empty"><div class="empty-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><h3>Tidak ada hasil</h3><p>Coba kata kunci lain</p></div>';
+    document.getElementById('pagination').innerHTML='';return;
   }
   var start=(page-1)*PER,items=filtered.slice(start,start+PER);
   list.innerHTML=items.map(function(u,i){
     var n=u.u[0].toUpperCase(),num=start+i+1;
-    return '<div class="user-item" style="animation-delay:'+(i*18)+'ms">'+
+    return '<div class="user-item" style="animation-delay:'+(i*16)+'ms">'+
       '<div class="user-num">'+num+'</div>'+
       '<div class="user-avatar">'+n+'</div>'+
       '<div class="user-info">'+
         '<div class="user-name">@'+u.u+'</div>'+
         '<div class="user-date">'+(u.d||'Tanggal tidak diketahui')+'</div>'+
       '</div>'+
-      '<a class="user-open" href="https://www.instagram.com/'+u.u+'/" target="_blank" rel="noopener noreferrer" aria-label="Buka profil '+u.u+'">↗</a>'+
+      '<a class="user-open" href="https://www.instagram.com/'+u.u+'/" target="_blank" rel="noopener noreferrer" aria-label="Buka profil '+u.u+'">'+
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'+
+      '</a>'+
     '</div>';
   }).join('');
   renderPager(total);
@@ -666,7 +714,7 @@ function render(){
 function renderPager(total){
   var tp=Math.ceil(total/PER),pag=document.getElementById('pagination');
   if(tp<=1){pag.innerHTML='';return;}
-  var h='<button class="pg-btn" onclick="goPage('+(page-1)+')" '+(page===1?'disabled':'')+'>‹</button>';
+  var h='<button class="pg-btn" onclick="goPage('+(page-1)+')" '+(page===1?'disabled':'')+'>&#8249;</button>';
   var r=[];
   for(var p=1;p<=tp;p++){
     if(p===1||p===tp||(p>=page-1&&p<=page+1))r.push(p);
@@ -674,9 +722,9 @@ function renderPager(total){
   }
   r.forEach(function(p){
     if(p==='…')h+='<button class="pg-btn" disabled>…</button>';
-    else h+='<button class="pg-btn'+(p===page?' on':'')+' " onclick="goPage('+p+')">'+p+'</button>';
+    else h+='<button class="pg-btn'+(p===page?' on':'')+'" onclick="goPage('+p+')">'+p+'</button>';
   });
-  h+='<button class="pg-btn" onclick="goPage('+(page+1)+')" '+(page===tp?'disabled':'')+'>›</button>';
+  h+='<button class="pg-btn" onclick="goPage('+(page+1)+')" '+(page===tp?'disabled':'')+'>&#8250;</button>';
   pag.innerHTML=h;
 }
 
@@ -695,16 +743,16 @@ function exportCSV(){
   var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
   var a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
-  a.download='ig-unfollowers-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.download='unfollowme-'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
-  toast('CSV berhasil diunduh!','ok');
+  toast('CSV berhasil diunduh','ok');
 }
 
 // ── TOAST ─────────────────────────────────────────────────────────────────
 function toast(msg,type){
   var t=document.getElementById('toast');
   t.className='toast '+(type||'');
-  t.innerHTML=(type==='ok'?'✅':type==='err'?'❌':'ℹ️')+' '+msg;
+  t.textContent=msg;
   t.classList.add('show');
   setTimeout(function(){t.classList.remove('show');},3500);
 }
