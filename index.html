@@ -9,132 +9,203 @@
 <title>UnfollowMe — Instagram Unfollow Checker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --f:'Plus Jakarta Sans',system-ui,sans-serif;
-  --pink:#f0457a;--purple:#a855f7;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;
-  --pink2:#ff6b9d;--purple2:#c084fc;
-  --r4:4px;--r8:8px;--r12:12px;--r16:16px;--r20:20px;--r24:24px;--rfull:9999px;
+  --f:'Inter',system-ui,sans-serif;
+  --fd:'Sora',system-ui,sans-serif;
+  --pink:#f0457a;--purple:#9333ea;--blue:#3b82f6;--green:#22c55e;--orange:#f97316;
+  --pink2:#fb7aaa;--purple2:#c084fc;
+  --r8:8px;--r12:12px;--r16:16px;--r20:20px;--rfull:9999px;
   --tr:200ms cubic-bezier(.16,1,.3,1);
-  --bg:#08080c;--bg2:#0f0f17;--bg3:#13131e;
-  --surf:#16161f;--surf2:#1c1c28;--surf3:#222232;
-  --bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.12);
-  --txt:#f0effe;--txtm:rgba(240,239,254,.55);--txtf:rgba(240,239,254,.28);
-  --glow:0 0 40px rgba(168,85,247,.15),0 0 80px rgba(240,69,122,.08);
-  --shadow:0 2px 8px rgba(0,0,0,.4),0 8px 32px rgba(0,0,0,.3);
-  --shadow-lg:0 4px 16px rgba(0,0,0,.5),0 16px 48px rgba(0,0,0,.4);
+  --bg:#07070d;
+  --surf:#111118;--surf2:#18181f;--surf3:#1f1f2a;
+  --bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.13);
+  --txt:#eeeeff;--txtm:rgba(220,218,255,.5);--txtf:rgba(220,218,255,.25);
+  --shadow:0 2px 8px rgba(0,0,0,.5),0 8px 24px rgba(0,0,0,.35);
+  --shadow-lg:0 4px 20px rgba(0,0,0,.6),0 16px 48px rgba(0,0,0,.4);
 }
 [data-theme="light"]{
-  --bg:#f5f3ff;--bg2:#ede9fe;--bg3:#fff;
-  --surf:#fff;--surf2:#f8f6ff;--surf3:#f0edff;
-  --bdr:rgba(139,92,246,.15);--bdr2:rgba(139,92,246,.25);
-  --txt:#1e1b4b;--txtm:#6b7280;--txtf:#9ca3af;
-  --shadow:0 2px 8px rgba(139,92,246,.1),0 4px 16px rgba(0,0,0,.06);
-  --shadow-lg:0 4px 24px rgba(139,92,246,.15),0 12px 40px rgba(0,0,0,.08);
+  --bg:#f4f3ff;
+  --surf:#fff;--surf2:#f8f6ff;--surf3:#ede9fe;
+  --bdr:rgba(109,40,217,.12);--bdr2:rgba(109,40,217,.22);
+  --txt:#1a1033;--txtm:#6b7280;--txtf:#b0aec8;
+  --shadow:0 2px 8px rgba(109,40,217,.08),0 4px 16px rgba(0,0,0,.05);
+  --shadow-lg:0 4px 24px rgba(109,40,217,.12),0 12px 40px rgba(0,0,0,.07);
 }
 html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;overflow-x:hidden;}
 body{
   font-family:var(--f);color:var(--txt);background:var(--bg);
-  min-height:100dvh;line-height:1.6;
-  background-image:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(168,85,247,.12),transparent),
-    radial-gradient(ellipse 60% 40% at 80% 60%,rgba(240,69,122,.07),transparent);
-  background-attachment:fixed;
+  min-height:100dvh;line-height:1.6;overflow-x:hidden;
 }
-[data-theme="light"] body{
-  background-image:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(139,92,246,.08),transparent),
-    radial-gradient(ellipse 60% 40% at 80% 60%,rgba(236,72,153,.05),transparent);
+
+/* ── ANIMATED BG ──────────────────────────────── */
+.bg-orbs{
+  position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
 }
-button{cursor:pointer;font-family:var(--f);border:none;background:none;}
-a,button{transition:all var(--tr);}
-img,svg{display:block;max-width:100%;}
-:focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:var(--r8);}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+.orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;
+  animation:orbFloat 12s ease-in-out infinite;
+}
+.orb1{
+  width:500px;height:500px;
+  background:radial-gradient(circle,#9333ea,transparent 70%);
+  top:-120px;left:-100px;
+  animation-duration:14s;
+}
+.orb2{
+  width:400px;height:400px;
+  background:radial-gradient(circle,#f0457a,transparent 70%);
+  top:30%;right:-80px;
+  animation-duration:11s;animation-delay:-4s;
+}
+.orb3{
+  width:350px;height:350px;
+  background:radial-gradient(circle,#3b82f6,transparent 70%);
+  bottom:-80px;left:30%;
+  animation-duration:16s;animation-delay:-7s;
+}
+@keyframes orbFloat{
+  0%,100%{transform:translateY(0) scale(1);}
+  33%{transform:translateY(-30px) scale(1.04);}
+  66%{transform:translateY(20px) scale(.97);}
+}
+[data-theme="light"] .orb{opacity:.09;}
+
+/* ── GRID NOISE OVERLAY ───────────────────────── */
+.bg-noise{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:128px 128px;
+}
 
 /* ── NAV ──────────────────────────────────────── */
 .nav{
   position:sticky;top:0;z-index:100;
-  padding:12px 20px;
-  padding-top:max(12px,env(safe-area-inset-top));
-  background:rgba(8,8,12,.75);
-  backdrop-filter:blur(24px) saturate(180%);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  padding:0 24px;
+  height:60px;
+  padding-top:max(0px,env(safe-area-inset-top));
+  background:rgba(7,7,13,.8);
+  backdrop-filter:blur(24px) saturate(160%);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);
   border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;
 }
-[data-theme="light"] .nav{background:rgba(245,243,255,.85);}
-.nav-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+[data-theme="light"] .nav{background:rgba(244,243,255,.85);}
+.nav-inner{
+  width:100%;max-width:1100px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-icon{
-  width:32px;height:32px;border-radius:9px;
-  background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 12px rgba(240,69,122,.4);
-  flex-shrink:0;
+
+/* Custom SVG logo — abstract unfollow mark */
+.logo-mark{flex-shrink:0;}
+.logo-title{
+  font-family:var(--fd);font-size:18px;font-weight:800;
+  letter-spacing:-.6px;line-height:1;
 }
-.logo-title{font-size:17px;font-weight:800;letter-spacing:-.4px;}
-.logo-title em{font-style:normal;background:linear-gradient(90deg,var(--pink2),var(--purple2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.logo-title .un{color:var(--txt);}
+.logo-title .follow{
+  background:linear-gradient(110deg,var(--pink2),var(--purple2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.logo-title .me{color:var(--txt);}
 .theme-btn{
   width:36px;height:36px;border-radius:var(--rfull);
   background:var(--surf2);border:1px solid var(--bdr);
   display:flex;align-items:center;justify-content:center;
-  color:var(--txtm);
+  color:var(--txtm);cursor:pointer;font-family:var(--f);
+  transition:all var(--tr);
 }
 .theme-btn:hover{background:var(--surf3);color:var(--txt);}
 
-/* ── MAIN ─────────────────────────────────────── */
-main{max-width:480px;margin:0 auto;padding:24px 16px 100px;}
+/* ── PAGE WRAPPER ─────────────────────────────── */
+.page{position:relative;z-index:1;}
 
 /* ── HERO ─────────────────────────────────────── */
-.hero{text-align:center;margin-bottom:24px;padding:0 4px;}
+.hero{
+  text-align:center;
+  padding:56px 24px 40px;
+  max-width:640px;margin:0 auto;
+}
 .hero-badge{
   display:inline-flex;align-items:center;gap:6px;
-  padding:4px 12px;
-  background:linear-gradient(135deg,rgba(168,85,247,.15),rgba(240,69,122,.1));
-  border:1px solid rgba(168,85,247,.3);
+  padding:5px 14px;
+  background:linear-gradient(135deg,rgba(147,51,234,.18),rgba(240,69,122,.12));
+  border:1px solid rgba(147,51,234,.35);
   border-radius:var(--rfull);
   font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--purple2);margin-bottom:14px;
+  color:var(--purple2);margin-bottom:20px;
+  animation:fadeDown .5s ease both;
 }
 .hero h1{
-  font-size:clamp(26px,7vw,34px);font-weight:800;line-height:1.15;
-  letter-spacing:-.5px;margin-bottom:10px;text-wrap:balance;
+  font-family:var(--fd);
+  font-size:clamp(32px,6vw,52px);font-weight:800;line-height:1.1;
+  letter-spacing:-.8px;margin-bottom:14px;text-wrap:balance;
+  animation:fadeDown .5s .08s ease both;
 }
 .hero h1 .g{
-  background:linear-gradient(120deg,var(--pink),var(--purple),var(--blue));
+  background:linear-gradient(120deg,var(--pink2),var(--purple),var(--blue));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.hero p{font-size:13px;color:var(--txtm);max-width:34ch;margin:0 auto;line-height:1.7;}
-
-/* ── UPLOAD SECTION ───────────────────────────── */
-.upload-section{margin-bottom:12px;}
-.section-label{
-  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
-  color:var(--txtm);margin-bottom:10px;display:flex;align-items:center;gap:6px;
+.hero p{
+  font-size:15px;color:var(--txtm);max-width:38ch;margin:0 auto;line-height:1.75;
+  animation:fadeDown .5s .16s ease both;
 }
-.upload-pair{display:flex;flex-direction:column;gap:10px;}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:scale(1);}}
+
+/* ── MAIN CONTENT ─────────────────────────────── */
+.container{
+  max-width:1100px;margin:0 auto;
+  padding:0 24px 80px;
+}
+
+/* desktop two-col for upload + result */
+.layout{display:block;}
+@media(min-width:860px){
+  .layout{display:grid;grid-template-columns:380px 1fr;gap:28px;align-items:start;}
+  .upload-col{position:sticky;top:76px;}
+}
+
+/* ── CARD BASE ────────────────────────────────── */
+.card{
+  background:var(--surf);border:1px solid var(--bdr);
+  border-radius:var(--r20);box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+/* ── UPLOAD CARDS ─────────────────────────────── */
+.upload-col{animation:scaleIn .4s .1s ease both;}
+.upload-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:10px;}
+
 .upload-card{
   background:var(--surf);
   border:1.5px dashed var(--bdr2);
-  border-radius:var(--r20);
+  border-radius:var(--r16);
   padding:18px 16px;
   cursor:pointer;display:block;
-  position:relative;overflow:hidden;
+  position:relative;
   transition:all var(--tr);
   box-shadow:var(--shadow);
 }
 .upload-card::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(168,85,247,.06),rgba(240,69,122,.03));
+  content:'';position:absolute;inset:0;border-radius:var(--r16);
+  background:linear-gradient(135deg,rgba(147,51,234,.07),rgba(240,69,122,.04));
   opacity:0;transition:opacity var(--tr);pointer-events:none;
 }
 .upload-card:hover::before,.upload-card.dragover::before{opacity:1;}
 .upload-card:hover,.upload-card.dragover{
-  border-color:rgba(168,85,247,.45);
-  box-shadow:0 0 0 3px rgba(168,85,247,.1),var(--shadow);
+  border-color:rgba(147,51,234,.45);
+  box-shadow:0 0 0 3px rgba(147,51,234,.12),var(--shadow);
+  transform:translateY(-1px);
 }
 .upload-card.uploaded{
-  border-style:solid;border-color:rgba(34,197,94,.4);
+  border-style:solid;border-color:rgba(34,197,94,.38);
   background:linear-gradient(135deg,rgba(34,197,94,.05),var(--surf));
 }
 .upload-card input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
@@ -154,64 +225,87 @@ main{max-width:480px;margin:0 auto;padding:24px 16px 100px;}
 .upload-count{font-size:11px;font-weight:600;color:var(--green);margin-top:3px;display:none;}
 .upload-card.uploaded .upload-count{display:block;}
 .upload-caret{
-  width:30px;height:30px;flex-shrink:0;border-radius:var(--rfull);
+  width:28px;height:28px;flex-shrink:0;border-radius:var(--rfull);
   background:var(--surf2);border:1px solid var(--bdr);
   display:flex;align-items:center;justify-content:center;color:var(--txtf);
+  pointer-events:none;
 }
-.upload-card.uploaded .upload-caret{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.3);color:var(--green);}
+.upload-card.uploaded .upload-caret{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.25);color:var(--green);}
 
 /* ── ANALYZE BTN ──────────────────────────────── */
 .btn-analyze{
   width:100%;padding:15px;
-  background:linear-gradient(135deg,var(--pink),var(--purple));
-  color:#fff;font-size:15px;font-weight:800;letter-spacing:.01em;
-  border-radius:var(--r16);
-  box-shadow:0 4px 20px rgba(168,85,247,.35),0 2px 8px rgba(240,69,122,.2);
+  background:linear-gradient(135deg,#e8356e,#9333ea);
+  color:#fff;font-size:15px;font-weight:700;letter-spacing:.01em;
+  border-radius:var(--r16);border:none;cursor:pointer;
+  font-family:var(--fd);
+  box-shadow:0 4px 20px rgba(147,51,234,.4),0 2px 8px rgba(240,69,122,.25);
   position:relative;overflow:hidden;
-  margin-bottom:24px;
+  margin-bottom:16px;
+  transition:all var(--tr);
 }
-.btn-analyze::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent);}
-.btn-analyze:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 28px rgba(168,85,247,.45),0 4px 12px rgba(240,69,122,.3);}
+.btn-analyze::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);
+  pointer-events:none;
+}
+.btn-analyze:hover:not(:disabled){
+  transform:translateY(-2px);
+  box-shadow:0 8px 30px rgba(147,51,234,.5),0 4px 14px rgba(240,69,122,.35);
+}
 .btn-analyze:active:not(:disabled){transform:translateY(0);}
-.btn-analyze:disabled{opacity:.3;cursor:not-allowed;box-shadow:none;}
+.btn-analyze:disabled{opacity:.28;cursor:not-allowed;box-shadow:none;transform:none;}
 
-/* ── STATS ────────────────────────────────────── */
-.stats-grid{display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+/* ── STATS GRID ───────────────────────────────── */
+.stats-grid{
+  display:none;
+  grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;
+}
 .stat-card{
   background:var(--surf);border:1px solid var(--bdr);
   border-radius:var(--r16);padding:14px 10px;
   text-align:center;box-shadow:var(--shadow);
   position:relative;overflow:hidden;
+  animation:scaleIn .35s ease both;
 }
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .stat-card.c-blue::before{background:linear-gradient(90deg,var(--blue),var(--purple));}
 .stat-card.c-green::before{background:linear-gradient(90deg,var(--green),var(--blue));}
 .stat-card.c-red::before{background:linear-gradient(90deg,var(--pink),var(--orange));}
-.stat-num{font-size:clamp(18px,5vw,24px);font-weight:800;line-height:1;margin-bottom:4px;letter-spacing:-.5px;}
+.stat-num{font-family:var(--fd);font-size:clamp(18px,4vw,24px);font-weight:800;line-height:1;margin-bottom:4px;letter-spacing:-.5px;}
 .stat-card.c-blue .stat-num{color:var(--blue);}
 .stat-card.c-green .stat-num{color:var(--green);}
 .stat-card.c-red .stat-num{background:linear-gradient(135deg,var(--pink),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .stat-lbl{font-size:10px;color:var(--txtm);font-weight:600;line-height:1.3;text-wrap:balance;}
 
-/* ── RESULTS ──────────────────────────────────── */
-.results-section{display:none;}
-.results-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
-.results-title{font-size:15px;font-weight:800;}
-.results-title span{background:linear-gradient(90deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+/* ── RESULTS SECTION ──────────────────────────── */
+.results-section{display:none;animation:fadeUp .4s ease both;}
+.results-top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin-bottom:12px;flex-wrap:wrap;
+}
+.results-title{font-family:var(--fd);font-size:15px;font-weight:800;}
+.results-title span{
+  background:linear-gradient(90deg,var(--pink2),var(--purple2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
 .search-box{
   display:flex;align-items:center;gap:8px;
   background:var(--surf);border:1px solid var(--bdr);
   border-radius:var(--r12);padding:9px 14px;
   width:100%;margin-bottom:10px;
+  transition:all var(--tr);
 }
-.search-box:focus-within{border-color:rgba(168,85,247,.4);box-shadow:0 0 0 3px rgba(168,85,247,.08);}
+.search-box:focus-within{border-color:rgba(147,51,234,.4);box-shadow:0 0 0 3px rgba(147,51,234,.09);}
 .search-box input{flex:1;border:none;background:none;outline:none;font-size:14px;color:var(--txt);font-family:var(--f);}
 .search-box input::placeholder{color:var(--txtf);}
 .btn-export{
   display:flex;align-items:center;gap:6px;
   padding:8px 14px;
   background:var(--surf);border:1px solid var(--bdr);
-  border-radius:var(--r12);font-size:12px;font-weight:700;color:var(--txtm);
+  border-radius:var(--r12);font-size:12px;font-weight:600;color:var(--txtm);
+  cursor:pointer;font-family:var(--f);
+  transition:all var(--tr);
 }
 .btn-export:hover{border-color:var(--bdr2);color:var(--txt);}
 
@@ -221,40 +315,40 @@ main{max-width:480px;margin:0 auto;padding:24px 16px 100px;}
   background:var(--surf);border:1px solid var(--bdr);
   border-radius:var(--r16);padding:14px;
   display:flex;align-items:center;gap:12px;
-  animation:fadeUp .25s ease both;
+  animation:fadeUp .22s ease both;
   box-shadow:var(--shadow);
+  transition:border-color var(--tr),box-shadow var(--tr);
 }
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-.user-num{font-size:11px;color:var(--txtf);font-weight:700;min-width:22px;text-align:center;}
+.user-item:hover{border-color:var(--bdr2);box-shadow:var(--shadow-lg);}
+.user-num{font-size:11px;color:var(--txtf);font-weight:700;min-width:24px;text-align:center;flex-shrink:0;}
 .user-avatar{
-  width:42px;height:42px;border-radius:var(--rfull);flex-shrink:0;
-  background:linear-gradient(135deg,var(--pink),var(--purple));
+  width:40px;height:40px;border-radius:var(--rfull);flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  font-size:16px;font-weight:800;color:#fff;
-  box-shadow:0 2px 8px rgba(240,69,122,.25);
+  font-family:var(--fd);font-size:15px;font-weight:800;color:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
 }
 .user-info{flex:1;min-width:0;}
-.user-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.user-date{font-size:11px;color:var(--txtm);margin-top:1px;}
+.user-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .user-open{
-  flex-shrink:0;width:36px;height:36px;border-radius:var(--rfull);
-  background:linear-gradient(135deg,rgba(240,69,122,.12),rgba(168,85,247,.08));
-  border:1px solid rgba(240,69,122,.2);
+  flex-shrink:0;width:34px;height:34px;border-radius:var(--rfull);
+  background:var(--surf2);border:1px solid var(--bdr);
   display:flex;align-items:center;justify-content:center;
-  color:var(--pink);text-decoration:none;
+  color:var(--txtm);text-decoration:none;
+  transition:all var(--tr);
 }
-.user-open:hover{background:var(--pink);color:#fff;border-color:var(--pink);}
+.user-open:hover{background:linear-gradient(135deg,var(--pink),var(--purple));border-color:transparent;color:#fff;}
 
 /* ── PAGINATION ───────────────────────────────── */
 .pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 0 4px;flex-wrap:wrap;}
 .pg-btn{
   min-width:38px;height:38px;padding:0 8px;
   background:var(--surf);border:1px solid var(--bdr);
-  border-radius:var(--r12);font-size:13px;font-weight:700;
-  color:var(--txtm);font-family:var(--f);
+  border-radius:var(--r12);font-size:13px;font-weight:600;
+  color:var(--txtm);font-family:var(--f);cursor:pointer;
+  transition:all var(--tr);
 }
-.pg-btn:hover:not(:disabled){border-color:rgba(168,85,247,.4);color:var(--purple2);}
-.pg-btn.on{background:linear-gradient(135deg,var(--pink),var(--purple));border-color:transparent;color:#fff;box-shadow:0 2px 10px rgba(168,85,247,.3);}
+.pg-btn:hover:not(:disabled){border-color:rgba(147,51,234,.4);color:var(--purple2);}
+.pg-btn.on{background:linear-gradient(135deg,var(--pink),var(--purple));border-color:transparent;color:#fff;box-shadow:0 2px 10px rgba(147,51,234,.35);}
 .pg-btn:disabled{opacity:.3;cursor:default;}
 
 /* ── EMPTY STATE ──────────────────────────────── */
@@ -269,55 +363,50 @@ main{max-width:480px;margin:0 auto;padding:24px 16px 100px;}
   display:flex;align-items:center;justify-content:center;
   margin:0 auto 14px;color:var(--txtf);
 }
-.empty h3{font-size:15px;font-weight:700;margin-bottom:6px;}
+.empty h3{font-family:var(--fd);font-size:15px;font-weight:700;margin-bottom:6px;}
 .empty p{font-size:13px;color:var(--txtm);}
 
 /* ── ACCORDION ────────────────────────────────── */
-.accordion{margin-bottom:10px;}
+.accordion{margin-top:8px;display:flex;flex-direction:column;gap:8px;}
 .accordion-item{
   background:var(--surf);border:1px solid var(--bdr);
-  border-radius:var(--r16);overflow:hidden;
-  box-shadow:var(--shadow);
+  border-radius:var(--r16);overflow:hidden;box-shadow:var(--shadow);
 }
-.accordion-item+.accordion-item{margin-top:8px;}
 .accordion-trigger{
   width:100%;display:flex;align-items:center;justify-content:space-between;
-  gap:10px;padding:15px 16px;
-  text-align:left;font-size:13px;font-weight:700;color:var(--txt);
-  font-family:var(--f);
+  gap:10px;padding:14px 16px;
+  text-align:left;font-size:13px;font-weight:600;color:var(--txt);
+  font-family:var(--f);cursor:pointer;border:none;background:none;
+  transition:background var(--tr);
 }
 .accordion-trigger:hover{background:var(--surf2);}
 .accordion-left{display:flex;align-items:center;gap:10px;}
-.accordion-icon{
-  width:30px;height:30px;border-radius:var(--r8);
+.acc-icon{
+  width:28px;height:28px;border-radius:var(--r8);
   background:var(--surf2);border:1px solid var(--bdr);
   display:flex;align-items:center;justify-content:center;
   color:var(--txtm);flex-shrink:0;
 }
-.accordion-chevron{color:var(--txtf);transition:transform var(--tr);flex-shrink:0;}
-.accordion-item.open .accordion-chevron{transform:rotate(180deg);}
-.accordion-body{
-  max-height:0;overflow:hidden;
-  transition:max-height .35s cubic-bezier(.16,1,.3,1);
-}
-.accordion-item.open .accordion-body{max-height:600px;}
+.acc-chevron{color:var(--txtf);transition:transform var(--tr);flex-shrink:0;}
+.accordion-item.open .acc-chevron{transform:rotate(180deg);}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.16,1,.3,1);}
+.accordion-item.open .accordion-body{max-height:700px;}
 .accordion-content{padding:0 16px 16px;}
 
-/* ── HOW-TO STEPS ─────────────────────────────── */
-.how-steps{display:flex;flex-direction:column;gap:0;}
+/* ── HOW-TO ───────────────────────────────────── */
+.how-steps{display:flex;flex-direction:column;}
 .how-step{
   display:flex;align-items:flex-start;gap:12px;
-  padding:10px 0;
-  border-bottom:1px solid var(--bdr);
+  padding:10px 0;border-bottom:1px solid var(--bdr);
 }
 .how-step:last-child{border-bottom:none;padding-bottom:0;}
 .how-step:first-child{padding-top:0;}
 .how-num{
-  width:26px;height:26px;flex-shrink:0;border-radius:var(--rfull);
+  width:24px;height:24px;flex-shrink:0;border-radius:var(--rfull);
   background:linear-gradient(135deg,var(--pink),var(--purple));
   display:flex;align-items:center;justify-content:center;
   font-size:11px;font-weight:800;color:#fff;
-  box-shadow:0 2px 8px rgba(240,69,122,.3);
+  box-shadow:0 2px 6px rgba(147,51,234,.35);
 }
 .how-body h4{font-size:13px;font-weight:700;margin-bottom:2px;}
 .how-body p{font-size:12px;color:var(--txtm);line-height:1.6;}
@@ -327,24 +416,18 @@ main{max-width:480px;margin:0 auto;padding:24px 16px 100px;}
   padding:1px 5px;border-radius:4px;
 }
 
-/* ── T&C LIST ─────────────────────────────────── */
+/* ── T&C ──────────────────────────────────────── */
 .tnc-list{display:flex;flex-direction:column;gap:8px;}
-.tnc-item{
-  display:flex;align-items:flex-start;gap:10px;
-  font-size:12px;color:var(--txtm);line-height:1.6;
-}
-.tnc-dot{
-  width:5px;height:5px;border-radius:var(--rfull);
-  background:var(--bdr2);flex-shrink:0;margin-top:7px;
-}
+.tnc-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--txtm);line-height:1.6;}
+.tnc-dot{width:4px;height:4px;border-radius:var(--rfull);background:var(--bdr2);flex-shrink:0;margin-top:8px;}
 
 /* ── TOAST ────────────────────────────────────── */
 .toast{
   position:fixed;bottom:max(24px,env(safe-area-inset-bottom));left:50%;
-  transform:translateX(-50%) translateY(120%);
+  transform:translateX(-50%) translateY(140%);
   z-index:999;background:var(--surf2);
   border:1px solid var(--bdr2);border-radius:var(--r16);
-  padding:12px 18px;box-shadow:var(--shadow-lg);
+  padding:11px 18px;box-shadow:var(--shadow-lg);
   font-size:13px;font-weight:600;
   display:flex;align-items:center;gap:8px;
   white-space:nowrap;
@@ -352,214 +435,258 @@ main{max-width:480px;margin:0 auto;padding:24px 16px 100px;}
   max-width:calc(100vw - 40px);
 }
 .toast.show{transform:translateX(-50%) translateY(0);}
-.toast.ok{border-color:rgba(34,197,94,.4);}
-.toast.err{border-color:rgba(240,69,122,.4);}
+.toast.ok{border-color:rgba(34,197,94,.38);}
+.toast.err{border-color:rgba(240,69,122,.38);}
+.toast-dot{width:8px;height:8px;border-radius:var(--rfull);flex-shrink:0;}
+.toast.ok .toast-dot{background:var(--green);}
+.toast.err .toast-dot{background:var(--pink);}
 
 /* ── FOOTER ───────────────────────────────────── */
 .footer{
-  text-align:center;padding:20px 16px;
-  padding-bottom:max(20px,env(safe-area-inset-bottom));
+  text-align:center;padding:24px 16px;
+  padding-bottom:max(24px,env(safe-area-inset-bottom));
   border-top:1px solid var(--bdr);
-  font-size:11px;color:var(--txtf);line-height:1.8;
+  font-size:11px;color:var(--txtf);line-height:2;
+  position:relative;z-index:1;
 }
 
-/* ── DESKTOP ──────────────────────────────────── */
-@media(min-width:520px){
-  main{padding:32px 24px 80px;}
-  .upload-pair{flex-direction:row;}
-  .upload-pair .upload-card{flex:1;}
+/* ── MOBILE adjustments ───────────────────────── */
+@media(max-width:859px){
+  .container{padding:0 16px 80px;}
+  .hero{padding:40px 16px 28px;}
+}
+@media(max-width:520px){
+  .upload-wrap{gap:8px;}
+}
+
+/* ── Accessibility ────────────────────────────── */
+button{cursor:pointer;font-family:var(--f);border:none;background:none;}
+a,button{transition:all var(--tr);}
+img,svg{display:block;max-width:100%;}
+:focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:var(--r8);}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}
+  .orb{animation:none;}
 }
 </style>
 </head>
 <body>
 
+<div class="bg-orbs" aria-hidden="true">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+<div class="bg-noise" aria-hidden="true"></div>
+
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
-    <a class="logo" href="#">
-      <div class="logo-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="2" y="2" width="20" height="20" rx="6" stroke="white" stroke-width="2"/>
-          <circle cx="12" cy="12" r="4" stroke="white" stroke-width="2"/>
-          <circle cx="17.5" cy="6.5" r="1.5" fill="white"/>
-        </svg>
-      </div>
-      <span class="logo-title">Unfollow<em>Me</em></span>
+    <a class="logo" href="#" aria-label="UnfollowMe">
+      <!-- Custom abstract logo mark -->
+      <svg class="logo-mark" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="10" fill="url(#lg)"/>
+        <!-- person shape -->
+        <circle cx="13" cy="11" r="4" fill="white" opacity=".95"/>
+        <path d="M5 25c0-4.418 3.582-8 8-8h0c4.418 0 8 3.582 8 8" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".95"/>
+        <!-- unfollow X arrow -->
+        <line x1="22" y1="14" x2="28" y2="14" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".9"/>
+        <path d="M25 11l3 3-3 3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+        <defs>
+          <linearGradient id="lg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#e8356e"/>
+            <stop offset="1" stop-color="#9333ea"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="logo-title">
+        <span class="un">Unfollow</span><span class="follow">Me</span>
+      </span>
     </a>
     <button class="theme-btn" id="themeBtn" aria-label="Ganti tema"></button>
   </div>
 </nav>
 
-<main>
-
+<div class="page">
   <!-- HERO -->
   <section class="hero">
     <div class="hero-badge">
-      <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg width="9" height="9" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="6" cy="6" r="5"/></svg>
       100% Privat &amp; Gratis
     </div>
     <h1>Siapa yang tidak<br><span class="g">follow balik</span> kamu?</h1>
-    <p>Upload file export resmi Instagram. Semua diproses di browser — tidak ada data yang dikirim.</p>
+    <p>Upload file export resmi Instagram. Semua diproses langsung di browser — tidak ada data yang dikirim ke server.</p>
   </section>
 
-  <!-- UPLOAD -->
-  <div class="upload-section">
-    <div class="section-label">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      Upload File
-    </div>
-    <div class="upload-pair">
+  <!-- MAIN CONTAINER -->
+  <div class="container">
+    <div class="layout">
 
-      <label class="upload-card" id="fwrCard">
-        <input type="file" id="fwrFile" accept=".html,.htm" aria-label="Upload file followers">
-        <div class="upload-inner">
-          <div class="upload-icon" id="fwrIcon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <!-- LEFT COL: upload -->
+      <div class="upload-col">
+        <div class="upload-wrap">
+
+          <label class="upload-card" id="fwrCard">
+            <input type="file" id="fwrFile" accept=".html,.htm" aria-label="Upload file followers">
+            <div class="upload-inner">
+              <div class="upload-icon" id="fwrIcon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="upload-info">
+                <h3>File Followers</h3>
+                <div class="fname">followers_1.html</div>
+                <div class="upload-count" id="fwrCount"></div>
+              </div>
+              <div class="upload-caret" id="fwrCaret">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </div>
+          </label>
+
+          <label class="upload-card" id="fwgCard">
+            <input type="file" id="fwgFile" accept=".html,.htm" aria-label="Upload file following">
+            <div class="upload-inner">
+              <div class="upload-icon" id="fwgIcon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+              </div>
+              <div class="upload-info">
+                <h3>File Following</h3>
+                <div class="fname">following.html</div>
+                <div class="upload-count" id="fwgCount"></div>
+              </div>
+              <div class="upload-caret" id="fwgCaret">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </div>
+          </label>
+
+        </div>
+
+        <button class="btn-analyze" id="analyzeBtn" disabled onclick="analyze()">
+          Analisis Sekarang
+        </button>
+
+        <!-- ACCORDION -->
+        <div class="accordion">
+          <div class="accordion-item" id="accHow">
+            <button class="accordion-trigger" onclick="toggleAcc('accHow')" aria-expanded="false">
+              <div class="accordion-left">
+                <div class="acc-icon">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                </div>
+                Cara Mendapatkan File
+              </div>
+              <svg class="acc-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="accordion-body">
+              <div class="accordion-content">
+                <div class="how-steps">
+                  <div class="how-step">
+                    <div class="how-num">1</div>
+                    <div class="how-body"><h4>Buka Instagram</h4><p>Pengaturan → Akun → Pusat Akun</p></div>
+                  </div>
+                  <div class="how-step">
+                    <div class="how-num">2</div>
+                    <div class="how-body"><h4>Unduh Informasi Anda</h4><p>Pilih format <strong>HTML</strong>, tunggu email dari Instagram</p></div>
+                  </div>
+                  <div class="how-step">
+                    <div class="how-num">3</div>
+                    <div class="how-body"><h4>Ekstrak ZIP</h4><p>Buka folder <code>followers_and_following/</code></p></div>
+                  </div>
+                  <div class="how-step">
+                    <div class="how-num">4</div>
+                    <div class="how-body"><h4>Upload ke sini</h4><p>File <code>followers_1.html</code> dan <code>following.html</code></p></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="upload-info">
-            <h3>File Followers</h3>
-            <div class="fname">followers_1.html</div>
-            <div class="upload-count" id="fwrCount"></div>
-          </div>
-          <div class="upload-caret" id="fwrCaret">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+
+          <div class="accordion-item" id="accTnc">
+            <button class="accordion-trigger" onclick="toggleAcc('accTnc')" aria-expanded="false">
+              <div class="accordion-left">
+                <div class="acc-icon">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                Privasi &amp; Ketentuan
+              </div>
+              <svg class="acc-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="accordion-body">
+              <div class="accordion-content">
+                <div class="tnc-list">
+                  <div class="tnc-item"><div class="tnc-dot"></div><span>Semua file diproses sepenuhnya di browser — tidak ada data yang dikirim ke server.</span></div>
+                  <div class="tnc-item"><div class="tnc-dot"></div><span>Tidak terafiliasi dengan Instagram atau Meta dalam bentuk apapun.</span></div>
+                  <div class="tnc-item"><div class="tnc-dot"></div><span>Hasil bergantung pada data export; akurasi tidak dijamin 100%.</span></div>
+                  <div class="tnc-item"><div class="tnc-dot"></div><span>Gunakan informasi ini secara bijak dan hormati privasi pengguna lain.</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </label>
+      </div><!-- /upload-col -->
 
-      <label class="upload-card" id="fwgCard">
-        <input type="file" id="fwgFile" accept=".html,.htm" aria-label="Upload file following">
-        <div class="upload-inner">
-          <div class="upload-icon" id="fwgIcon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      <!-- RIGHT COL: results -->
+      <div class="results-col">
+        <!-- STATS -->
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card c-blue">
+            <div class="stat-num" id="sFollowing">—</div>
+            <div class="stat-lbl">Kamu Ikuti</div>
           </div>
-          <div class="upload-info">
-            <h3>File Following</h3>
-            <div class="fname">following.html</div>
-            <div class="upload-count" id="fwgCount"></div>
+          <div class="stat-card c-green">
+            <div class="stat-num" id="sFollowers">—</div>
+            <div class="stat-lbl">Followers</div>
           </div>
-          <div class="upload-caret" id="fwgCaret">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          <div class="stat-card c-red">
+            <div class="stat-num" id="sNotBack">—</div>
+            <div class="stat-lbl">Tidak Balik Follow</div>
           </div>
         </div>
-      </label>
+
+        <!-- RESULTS LIST -->
+        <div class="results-section" id="resultsSection">
+          <div class="results-top">
+            <div class="results-title">Tidak Follow Balik <span id="rCount"></span></div>
+            <button class="btn-export" onclick="exportCSV()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+          </div>
+          <div class="search-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="searchInput" placeholder="Cari username..." oninput="filterAndRender()" aria-label="Cari username">
+          </div>
+          <div class="user-list" id="userList"></div>
+          <div class="pagination" id="pagination"></div>
+        </div>
+
+        <!-- PLACEHOLDER before analyze -->
+        <div class="empty" id="placeholderEmpty">
+          <div class="empty-ico">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          </div>
+          <h3>Belum ada hasil</h3>
+          <p>Upload kedua file dan klik Analisis Sekarang</p>
+        </div>
+      </div><!-- /results-col -->
 
     </div>
   </div>
-
-  <!-- ANALYZE -->
-  <button class="btn-analyze" id="analyzeBtn" disabled onclick="analyze()">
-    Analisis Sekarang
-  </button>
-
-  <!-- STATS -->
-  <div class="stats-grid" id="statsGrid">
-    <div class="stat-card c-blue">
-      <div class="stat-num" id="sFollowing">—</div>
-      <div class="stat-lbl">Kamu Ikuti</div>
-    </div>
-    <div class="stat-card c-green">
-      <div class="stat-num" id="sFollowers">—</div>
-      <div class="stat-lbl">Followers</div>
-    </div>
-    <div class="stat-card c-red">
-      <div class="stat-num" id="sNotBack">—</div>
-      <div class="stat-lbl">Tidak Balik Follow</div>
-    </div>
-  </div>
-
-  <!-- RESULTS -->
-  <div class="results-section" id="resultsSection">
-    <div class="results-top">
-      <div class="results-title">Tidak Follow Balik <span id="rCount"></span></div>
-      <button class="btn-export" onclick="exportCSV()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        CSV
-      </button>
-    </div>
-    <div class="search-box">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="searchInput" placeholder="Cari username..." oninput="filterAndRender()" aria-label="Cari username">
-    </div>
-    <div class="user-list" id="userList"></div>
-    <div class="pagination" id="pagination"></div>
-  </div>
-
-  <!-- ACCORDION: CARA PAKAI + T&C -->
-  <div class="accordion">
-
-    <!-- HOW TO -->
-    <div class="accordion-item" id="accHow">
-      <button class="accordion-trigger" onclick="toggleAcc('accHow')" aria-expanded="false">
-        <div class="accordion-left">
-          <div class="accordion-icon">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-          </div>
-          Cara Mendapatkan File
-        </div>
-        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-      </button>
-      <div class="accordion-body">
-        <div class="accordion-content">
-          <div class="how-steps">
-            <div class="how-step">
-              <div class="how-num">1</div>
-              <div class="how-body"><h4>Buka Instagram</h4><p>Masuk ke Pengaturan → Akun → Pusat Akun</p></div>
-            </div>
-            <div class="how-step">
-              <div class="how-num">2</div>
-              <div class="how-body"><h4>Unduh Informasi Anda</h4><p>Pilih format <strong>HTML</strong>, lalu tunggu email dari Instagram</p></div>
-            </div>
-            <div class="how-step">
-              <div class="how-num">3</div>
-              <div class="how-body"><h4>Ekstrak ZIP</h4><p>Buka folder <code>followers_and_following/</code></p></div>
-            </div>
-            <div class="how-step">
-              <div class="how-num">4</div>
-              <div class="how-body"><h4>Upload ke sini</h4><p>File <code>followers_1.html</code> dan <code>following.html</code></p></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- T&C -->
-    <div class="accordion-item" id="accTnc">
-      <button class="accordion-trigger" onclick="toggleAcc('accTnc')" aria-expanded="false">
-        <div class="accordion-left">
-          <div class="accordion-icon">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          Privasi &amp; Ketentuan
-        </div>
-        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-      </button>
-      <div class="accordion-body">
-        <div class="accordion-content">
-          <div class="tnc-list">
-            <div class="tnc-item"><div class="tnc-dot"></div><span>Semua file diproses sepenuhnya di browser kamu — tidak ada data yang dikirim ke server mana pun.</span></div>
-            <div class="tnc-item"><div class="tnc-dot"></div><span>Aplikasi ini tidak terafiliasi dengan Instagram atau Meta dalam bentuk apapun.</span></div>
-            <div class="tnc-item"><div class="tnc-dot"></div><span>Hasil analisis bergantung pada data export yang kamu upload; akurasi tidak dijamin 100%.</span></div>
-            <div class="tnc-item"><div class="tnc-dot"></div><span>Gunakan informasi ini secara bijak dan hormati privasi pengguna lain.</span></div>
-            <div class="tnc-item"><div class="tnc-dot"></div><span>Dengan menggunakan aplikasi ini kamu menyetujui ketentuan penggunaan yang berlaku.</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /accordion -->
-
-</main>
+</div>
 
 <footer class="footer">
   <p>UnfollowMe — Data hanya diproses di browser kamu</p>
-  <p style="margin-top:4px">Tidak terafiliasi dengan Instagram / Meta</p>
+  <p>Tidak terafiliasi dengan Instagram / Meta</p>
 </footer>
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <div class="toast-dot"></div>
+  <span id="toastMsg"></span>
+</div>
 
 <script>
-// ── THEME ─────────────────────────────────────────────────────────────────
+// ── THEME ──────────────────────────────────────────────────────────────────
 (function(){
   var btn=document.getElementById('themeBtn'),html=document.documentElement;
   var d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
@@ -570,7 +697,7 @@ main{max-width:480px;margin:0 auto;padding:24px 16px 100px;}
   btn.onclick=function(){d=d==='dark'?'light':'dark';html.setAttribute('data-theme',d);btn.innerHTML=d==='dark'?S:M;};
 })();
 
-// ── ACCORDION ─────────────────────────────────────────────────────────────
+// ── ACCORDION ──────────────────────────────────────────────────────────────
 function toggleAcc(id){
   var el=document.getElementById(id);
   var isOpen=el.classList.contains('open');
@@ -578,13 +705,23 @@ function toggleAcc(id){
   el.querySelector('.accordion-trigger').setAttribute('aria-expanded',String(!isOpen));
 }
 
-// ── DATA ──────────────────────────────────────────────────────────────────
+// ── STATE ──────────────────────────────────────────────────────────────────
 var fwrData=null,fwgData=null,unfollowers=[],filtered=[];
-var PER=20,page=1;
+var PER=25,page=1;
 var IG_RX=/^[a-zA-Z0-9._]{1,30}$/;
 var DATE_RX=/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},\s+\d{4}/i;
 
-// ── PARSER ────────────────────────────────────────────────────────────────
+// Avatar gradient palette
+var GRAD=[
+  'linear-gradient(135deg,#f0457a,#9333ea)',
+  'linear-gradient(135deg,#3b82f6,#06b6d4)',
+  'linear-gradient(135deg,#f97316,#f0457a)',
+  'linear-gradient(135deg,#22c55e,#3b82f6)',
+  'linear-gradient(135deg,#a855f7,#3b82f6)',
+  'linear-gradient(135deg,#f59e0b,#f97316)',
+];
+
+// ── PARSER ─────────────────────────────────────────────────────────────────
 function extractLines(doc){
   var lines=[],walker=doc.createTreeWalker(doc.body,4,null,false),node;
   while((node=walker.nextNode())){
@@ -601,10 +738,8 @@ function parseIG(html){
     L1.forEach(function(a){
       var m=(a.getAttribute('href')||'').match(/instagram\.com\/_u\/([^/?#\s]+)/);
       if(!m)return;
-      var u=m[1].trim().toLowerCase(),date='';
-      var c=a.closest('div')||a.parentElement;
-      if(c){var dm=c.textContent.match(DATE_RX);if(dm)date=dm[0];}
-      if(u)res.push({u:u,d:date});
+      var u=m[1].trim().toLowerCase();
+      if(u)res.push({u:u});
     });
     return res;
   }
@@ -616,10 +751,7 @@ function parseIG(html){
     if(!m)return;
     var u=m[1].trim().toLowerCase();
     if(u==='instagram')return;
-    var date='';
-    var c=a.closest('div')||a.parentElement;
-    if(c){var dm=c.textContent.match(DATE_RX);if(dm)date=dm[0];}
-    res.push({u:u,d:date});ok2=true;
+    res.push({u:u});ok2=true;
   });
   if(ok2)return res;
   var lines=extractLines(doc);
@@ -630,23 +762,23 @@ function parseIG(html){
     if(ln.length>30)continue;
     if(/^\d+$/.test(ln))continue;
     if(IG_RX.test(ln)){
-      var uname=ln.toLowerCase(),date='';
-      if(i+1<lines.length&&DATE_RX.test(lines[i+1])){var dm2=lines[i+1].match(DATE_RX);if(dm2)date=dm2[0];i++;}
-      res.push({u:uname,d:date});
+      var uname=ln.toLowerCase();
+      if(i+1<lines.length&&DATE_RX.test(lines[i+1]))i++;
+      res.push({u:uname});
     }
   }
   return res;
 }
 
-// ── UPLOAD HANDLERS ───────────────────────────────────────────────────────
-function setupUpload(inputId,cardId,iconId,countId,caretId,onDone){
+// ── UPLOAD SETUP ───────────────────────────────────────────────────────────
+function setupUpload(inputId,cardId,iconId,countId,onDone){
   var inp=document.getElementById(inputId);
   var card=document.getElementById(cardId);
   inp.addEventListener('change',async function(e){
     var f=e.target.files[0];if(!f)return;
     var data=parseIG(await f.text());
     document.getElementById(iconId).innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
-    document.getElementById(countId).textContent=data.length.toLocaleString('id')+' akun terdeteksi';
+    document.getElementById(countId).textContent=data.length.toLocaleString('id')+' akun';
     card.classList.add('uploaded');
     onDone(data);checkReady();
   });
@@ -658,14 +790,14 @@ function setupUpload(inputId,cardId,iconId,countId,caretId,onDone){
   });
 }
 
-setupUpload('fwrFile','fwrCard','fwrIcon','fwrCount','fwrCaret',function(d){fwrData=d;});
-setupUpload('fwgFile','fwgCard','fwgIcon','fwgCount','fwgCaret',function(d){fwgData=d;});
+setupUpload('fwrFile','fwrCard','fwrIcon','fwrCount',function(d){fwrData=d;});
+setupUpload('fwgFile','fwgCard','fwgIcon','fwgCount',function(d){fwgData=d;});
 
 function checkReady(){
   document.getElementById('analyzeBtn').disabled=!(fwrData&&fwgData);
 }
 
-// ── ANALYZE ───────────────────────────────────────────────────────────────
+// ── ANALYZE ────────────────────────────────────────────────────────────────
 function analyze(){
   var fset=new Set(fwrData.map(function(x){return x.u;}));
   unfollowers=fwgData.filter(function(x){return !fset.has(x.u);});
@@ -673,13 +805,17 @@ function analyze(){
   document.getElementById('sFollowers').textContent=fwrData.length.toLocaleString('id');
   document.getElementById('sNotBack').textContent=unfollowers.length.toLocaleString('id');
   document.getElementById('statsGrid').style.display='grid';
+  document.getElementById('placeholderEmpty').style.display='none';
   document.getElementById('resultsSection').style.display='block';
   filtered=unfollowers.slice();page=1;render();
   toast('Ditemukan '+unfollowers.length+' akun tidak balik follow','ok');
-  setTimeout(function(){document.getElementById('statsGrid').scrollIntoView({behavior:'smooth',block:'start'});},120);
+  // mobile: scroll to results
+  if(window.innerWidth<860){
+    setTimeout(function(){document.getElementById('statsGrid').scrollIntoView({behavior:'smooth',block:'start'});},120);
+  }
 }
 
-// ── FILTER & RENDER ───────────────────────────────────────────────────────
+// ── FILTER & RENDER ────────────────────────────────────────────────────────
 function filterAndRender(){
   var q=document.getElementById('searchInput').value.toLowerCase().trim();
   filtered=q?unfollowers.filter(function(x){return x.u.includes(q);}):unfollowers.slice();
@@ -695,16 +831,17 @@ function render(){
   }
   var start=(page-1)*PER,items=filtered.slice(start,start+PER);
   list.innerHTML=items.map(function(u,i){
-    var n=u.u[0].toUpperCase(),num=start+i+1;
-    return '<div class="user-item" style="animation-delay:'+(i*16)+'ms">'+
+    var n=u.u[0].toUpperCase();
+    var num=start+i+1;
+    var grad=GRAD[(u.u.charCodeAt(0)+u.u.charCodeAt(u.u.length-1))%GRAD.length];
+    return '<div class="user-item" style="animation-delay:'+(i*14)+'ms">'+
       '<div class="user-num">'+num+'</div>'+
-      '<div class="user-avatar">'+n+'</div>'+
+      '<div class="user-avatar" style="background:'+grad+'">'+n+'</div>'+
       '<div class="user-info">'+
         '<div class="user-name">@'+u.u+'</div>'+
-        '<div class="user-date">'+(u.d||'Tanggal tidak diketahui')+'</div>'+
       '</div>'+
       '<a class="user-open" href="https://www.instagram.com/'+u.u+'/" target="_blank" rel="noopener noreferrer" aria-label="Buka profil '+u.u+'">'+
-        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'+
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>'+
       '</a>'+
     '</div>';
   }).join('');
@@ -722,7 +859,7 @@ function renderPager(total){
   }
   r.forEach(function(p){
     if(p==='…')h+='<button class="pg-btn" disabled>…</button>';
-    else h+='<button class="pg-btn'+(p===page?' on':'')+'" onclick="goPage('+p+')">'+p+'</button>';
+    else h+='<button class="pg-btn'+(p===page?' on':'')+(p===page?'':'')+'" onclick="goPage('+p+')">'+p+'</button>';
   });
   h+='<button class="pg-btn" onclick="goPage('+(page+1)+')" '+(page===tp?'disabled':'')+'>&#8250;</button>';
   pag.innerHTML=h;
@@ -732,14 +869,16 @@ function goPage(p){
   var tp=Math.ceil(filtered.length/PER);
   if(p<1||p>tp)return;
   page=p;render();
-  document.getElementById('resultsSection').scrollIntoView({behavior:'smooth',block:'start'});
+  if(window.innerWidth<860){
+    document.getElementById('resultsSection').scrollIntoView({behavior:'smooth',block:'start'});
+  }
 }
 
-// ── EXPORT ────────────────────────────────────────────────────────────────
+// ── EXPORT ─────────────────────────────────────────────────────────────────
 function exportCSV(){
   if(!filtered.length)return;
-  var rows=[['No','Username','URL','Diikuti Sejak']];
-  filtered.forEach(function(u,i){rows.push([i+1,u.u,'https://www.instagram.com/'+u.u+'/',u.d||'']);});
+  var rows=[['No','Username','URL']];
+  filtered.forEach(function(u,i){rows.push([i+1,u.u,'https://www.instagram.com/'+u.u+'/']);});
   var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
   var a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
@@ -748,14 +887,15 @@ function exportCSV(){
   toast('CSV berhasil diunduh','ok');
 }
 
-// ── TOAST ─────────────────────────────────────────────────────────────────
+// ── TOAST ──────────────────────────────────────────────────────────────────
 function toast(msg,type){
   var t=document.getElementById('toast');
   t.className='toast '+(type||'');
-  t.textContent=msg;
+  document.getElementById('toastMsg').textContent=msg;
   t.classList.add('show');
   setTimeout(function(){t.classList.remove('show');},3500);
 }
 </script>
 </body>
 </html>
+", "_tool_input_summary": "Overhaul index.html: new custom SVG logo (person+arrow, not IG), Sora font for headings/logo, animated floating orb background, tanggal dihapus, layout 2-kolom untuk desktop (upload kiri sticky, hasil kanan), placeholder empty state di kanan sebelum analisis, toast fix (no emoji), bug lingkaran dihapus", "_requires_user_approval": true}
