@@ -92,7 +92,7 @@ body{
 /* CONTAINER */
 .container{
   max-width:1100px;margin:0 auto;
-  padding:0 max(16px,env(safe-area-inset-left)) 80px;
+  padding:0 max(16px,env(safe-area-inset-left)) 48px;
 }
 
 /* DESKTOP 2-col */
@@ -106,22 +106,55 @@ body{
 .upload-col{animation:scaleIn .4s .1s ease both;}
 .upload-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:10px;}
 
-/* UPLOAD CARD */
+/* ── SNAKE DOT RING ─────────────────────────────────────
+   Draws a dashed border around .upload-card via SVG overlay.
+   The dash-offset animates to create a "snake" running around the edge.
+──────────────────────────────────────────────────────── */
 .upload-card{
-  background:var(--surf);border:1.5px dashed var(--bdr2);
+  background:var(--surf);
   border-radius:var(--r16);padding:16px;
   cursor:pointer;display:block;position:relative;
   transition:all var(--tr);box-shadow:var(--shadow);
   -webkit-tap-highlight-color:transparent;
+  /* hide native dashed border — SVG handles it */
+  border:1.5px solid transparent;
+}
+.upload-card .snake-ring{
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;border-radius:var(--r16);
+  overflow:visible;
+}
+.upload-card .snake-ring rect{
+  fill:none;
+  stroke-width:2;
+  rx:14;ry:14;
+  stroke-dasharray:14 4;
+  stroke-dashoffset:0;
+  animation:snakeRun 2.4s linear infinite;
+  stroke:url(#snakeGrad);
+  opacity:.55;
+}
+@keyframes snakeRun{
+  to{stroke-dashoffset:-200;}
 }
 .upload-card::before{content:'';position:absolute;inset:0;border-radius:var(--r16);background:linear-gradient(135deg,rgba(147,51,234,.07),rgba(240,69,122,.04));opacity:0;transition:opacity var(--tr);pointer-events:none;}
 .upload-card:hover::before,.upload-card.dragover::before{opacity:1;}
-.upload-card:hover,.upload-card.dragover{border-color:rgba(147,51,234,.45);box-shadow:0 0 0 3px rgba(147,51,234,.1),var(--shadow);transform:translateY(-1px);}
-.upload-card.uploaded{border-style:solid;border-color:rgba(34,197,94,.38);background:linear-gradient(135deg,rgba(34,197,94,.05),var(--surf));}
-/* file input — hidden but functional on iOS */
+.upload-card:hover .snake-ring rect,.upload-card.dragover .snake-ring rect{opacity:1;animation-duration:1.4s;}
+.upload-card.uploaded{
+  border-color:rgba(34,197,94,.38);
+  background:linear-gradient(135deg,rgba(34,197,94,.05),var(--surf));
+}
+.upload-card.uploaded .snake-ring rect{
+  stroke:url(#snakeGradGreen);
+  stroke-dasharray:18 3;
+  opacity:.7;
+  animation-duration:3s;
+}
+
+/* file input — hidden but full-area tappable */
 .upload-card input[type="file"]{
   position:absolute;inset:0;opacity:0;cursor:pointer;
-  width:100%;height:100%;font-size:16px;/* prevent iOS zoom */
+  width:100%;height:100%;font-size:16px;
 }
 .upload-inner{display:flex;align-items:center;gap:12px;pointer-events:none;}
 .upload-icon{width:42px;height:42px;flex-shrink:0;border-radius:var(--r12);background:var(--surf2);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;color:var(--txtm);transition:all var(--tr);}
@@ -172,7 +205,7 @@ body{
 .results-title span{background:linear-gradient(90deg,var(--pink2),var(--purple2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .search-box{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r12);padding:10px 14px;width:100%;margin-bottom:10px;transition:all var(--tr);}
 .search-box:focus-within{border-color:rgba(147,51,234,.4);box-shadow:0 0 0 3px rgba(147,51,234,.09);}
-.search-box input{flex:1;border:none;background:none;outline:none;font-size:16px;/* prevent iOS zoom */color:var(--txt);font-family:var(--f);}
+.search-box input{flex:1;border:none;background:none;outline:none;font-size:16px;color:var(--txt);font-family:var(--f);}
 .search-box input::placeholder{color:var(--txtf);}
 .btn-export{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r12);font-size:12px;font-weight:600;color:var(--txtm);cursor:pointer;font-family:var(--f);transition:all var(--tr);white-space:nowrap;-webkit-tap-highlight-color:transparent;}
 .btn-export:hover{border-color:var(--bdr2);color:var(--txt);}
@@ -201,14 +234,17 @@ body{
 .empty-state h3{font-family:var(--fd);font-size:15px;font-weight:700;margin-bottom:6px;}
 .empty-state p{font-size:13px;color:var(--txtm);}
 
-/* INFO SECTIONS — full width at bottom */
+/* ── INFO SECTIONS — full width, below layout ─── */
 .info-sections{
   max-width:1100px;margin:0 auto;
-  padding:0 max(16px,env(safe-area-inset-left)) 0;
+  padding:0 max(16px,env(safe-area-inset-left));
+  padding-bottom:max(40px, calc(env(safe-area-inset-bottom) + 24px));
   display:flex;flex-direction:column;gap:12px;
-  margin-bottom:32px;
 }
-.info-card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r16);overflow:hidden;box-shadow:var(--shadow);}
+.info-card{
+  background:var(--surf);border:1px solid var(--bdr);
+  border-radius:var(--r16);overflow:hidden;box-shadow:var(--shadow);
+}
 .info-trigger{
   width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
   padding:16px 20px;text-align:left;font-size:14px;font-weight:600;
@@ -222,30 +258,49 @@ body{
 .info-icon{width:30px;height:30px;border-radius:var(--r8);background:var(--surf2);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;color:var(--txtm);flex-shrink:0;}
 .info-chevron{color:var(--txtf);transition:transform var(--tr);flex-shrink:0;}
 .info-card.open .info-chevron{transform:rotate(180deg);}
-.info-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1);}
-.info-card.open .info-body{max-height:1000px;}
-.info-content{padding:0 20px 20px;}
+.info-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.16,1,.3,1);}
+.info-card.open .info-body{max-height:2000px;}
+.info-content{padding:4px 20px 24px;}
 
 /* HOW-TO */
 .how-steps{display:flex;flex-direction:column;}
-.how-step{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid var(--bdr);}
-.how-step:last-child{border-bottom:none;padding-bottom:0;}
-.how-step:first-child{padding-top:0;}
-.how-num{width:26px;height:26px;flex-shrink:0;border-radius:var(--rfull);background:linear-gradient(135deg,var(--pink),var(--purple));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;box-shadow:0 2px 8px rgba(147,51,234,.35);margin-top:1px;}
-.how-body h4{font-size:14px;font-weight:700;margin-bottom:3px;}
-.how-body p{font-size:13px;color:var(--txtm);line-height:1.65;}
-.how-body code{font-family:ui-monospace,monospace;font-size:12px;background:var(--surf3);color:var(--purple2);padding:2px 6px;border-radius:4px;word-break:break-all;}
+.how-step{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 0;
+  border-bottom:1px solid var(--bdr);
+}
+.how-step:last-child{border-bottom:none;padding-bottom:4px;}
+.how-step:first-child{padding-top:8px;}
+.how-num{
+  width:28px;height:28px;flex-shrink:0;border-radius:var(--rfull);
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:#fff;
+  box-shadow:0 2px 8px rgba(147,51,234,.35);margin-top:1px;
+}
+.how-body h4{font-size:14px;font-weight:700;margin-bottom:4px;line-height:1.3;}
+.how-body p{font-size:13px;color:var(--txtm);line-height:1.7;}
+.how-body code{
+  display:inline;font-family:ui-monospace,monospace;font-size:12px;
+  background:var(--surf3);color:var(--purple2);
+  padding:2px 7px;border-radius:5px;
+  word-break:break-all;white-space:normal;
+}
 
 /* TNC */
-.tnc-list{display:flex;flex-direction:column;gap:10px;}
-.tnc-row{display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--txtm);line-height:1.65;}
-.tnc-bullet{width:5px;height:5px;min-width:5px;border-radius:50%;background:rgba(255,255,255,.18);margin-top:8px;}
-[data-theme="light"] .tnc-bullet{background:rgba(0,0,0,.18);}
+.tnc-list{display:flex;flex-direction:column;gap:12px;padding-top:4px;}
+.tnc-row{display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--txtm);line-height:1.7;}
+.tnc-bullet{
+  width:6px;height:6px;min-width:6px;min-height:6px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  margin-top:7px;flex-shrink:0;
+}
 
 /* TOAST */
 .toast{
   position:fixed;
-  bottom:max(24px,env(safe-area-inset-bottom));
+  bottom:max(24px,calc(env(safe-area-inset-bottom) + 80px));
   left:50%;transform:translateX(-50%) translateY(140%);
   z-index:999;background:var(--surf2);border:1px solid var(--bdr2);
   border-radius:var(--r16);padding:12px 20px;box-shadow:var(--shadow-lg);
@@ -265,24 +320,43 @@ body{
 .footer{
   text-align:center;
   padding:20px max(16px,env(safe-area-inset-left));
-  padding-bottom:max(24px,calc(env(safe-area-inset-bottom) + 12px));
+  padding-bottom:max(28px,calc(env(safe-area-inset-bottom) + 16px));
   border-top:1px solid var(--bdr);
   font-size:11px;color:var(--txtf);line-height:2;
   position:relative;z-index:1;
 }
 
-/* MOBILE SPECIFIC */
+/* MOBILE */
 @media(max-width:859px){
   .hero{padding:32px 16px 22px;}
   .container{padding:0 16px 32px;}
-  .info-sections{padding:0 16px;}
+  .info-sections{padding:0 16px;padding-bottom:max(40px,calc(env(safe-area-inset-bottom) + 24px));}
 }
 
 :focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:var(--r8);}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}.orb{animation:none;}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}
+  .orb{animation:none;}
+  .snake-ring rect{animation:none;}
+}
 </style>
 </head>
 <body>
+
+<!-- SVG defs for snake gradient — invisible, referenced by upload ring -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="snakeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0457a"/>
+      <stop offset="50%" stop-color="#9333ea"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="snakeGradGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+</svg>
 
 <div class="bg-orbs" aria-hidden="true">
   <div class="orb orb1"></div>
@@ -317,6 +391,10 @@ body{
         <div class="upload-wrap">
 
           <label class="upload-card" id="fwrCard">
+            <!-- snake ring SVG — sized by JS after render -->
+            <svg class="snake-ring" aria-hidden="true">
+              <rect id="snakeRectFwr" x="1" y="1" rx="14" ry="14"/>
+            </svg>
             <input type="file" id="fwrFile" accept=".html,.htm" aria-label="Upload file followers">
             <div class="upload-inner">
               <div class="upload-icon" id="fwrIcon">
@@ -334,6 +412,9 @@ body{
           </label>
 
           <label class="upload-card" id="fwgCard">
+            <svg class="snake-ring" aria-hidden="true">
+              <rect id="snakeRectFwg" x="1" y="1" rx="14" ry="14"/>
+            </svg>
             <input type="file" id="fwgFile" accept=".html,.htm" aria-label="Upload file following">
             <div class="upload-inner">
               <div class="upload-icon" id="fwgIcon">
@@ -391,7 +472,7 @@ body{
     </div>
   </div>
 
-  <!-- INFO SECTIONS — full width, below everything -->
+  <!-- INFO SECTIONS — full width, below layout -->
   <div class="info-sections">
 
     <div class="info-card" id="accHow">
@@ -431,7 +512,7 @@ body{
             <div class="how-step">
               <div class="how-num">4</div>
               <div class="how-body">
-                <h4>Unduh & Ekstrak</h4>
+                <h4>Unduh &amp; Ekstrak</h4>
                 <p>Instagram akan mengirim email berisi link unduhan. Unduh file ZIP, lalu ekstrak. Buka folder <code>followers_and_following/</code></p>
               </div>
             </div>
@@ -474,7 +555,7 @@ body{
 </div>
 
 <footer class="footer">
-  <p>UnfollowMe &mdash; Data hanya diproses di browser kamu</p>
+  <p>&copy; 2026 UnfollowMe. Hak cipta dilindungi.</p>
   <p>Tidak terafiliasi dengan Instagram / Meta</p>
 </footer>
 
@@ -484,6 +565,7 @@ body{
 </div>
 
 <script>
+/* ── Theme toggle ── */
 (function(){
   var btn=document.getElementById('themeBtn'),html=document.documentElement;
   var d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
@@ -494,12 +576,34 @@ body{
   btn.onclick=function(){d=d==='dark'?'light':'dark';html.setAttribute('data-theme',d);btn.innerHTML=d==='dark'?S:M;};
 })();
 
+/* ── Snake ring: set SVG rect to match each card's actual size ── */
+function fitSnakeRings(){
+  ['fwrCard','fwgCard'].forEach(function(id,i){
+    var card=document.getElementById(id);
+    var rectId=i===0?'snakeRectFwr':'snakeRectFwg';
+    var rect=document.getElementById(rectId);
+    if(!card||!rect)return;
+    var w=card.offsetWidth,h=card.offsetHeight;
+    var svg=rect.closest('svg');
+    svg.setAttribute('viewBox','0 0 '+w+' '+h);
+    rect.setAttribute('width',w-2);
+    rect.setAttribute('height',h-2);
+    /* perimeter for the dasharray/offset reference */
+    var perim=2*(w+h);
+    rect.style.strokeDasharray=Math.round(perim*0.07)+' '+Math.round(perim*0.02);
+  });
+}
+window.addEventListener('load',fitSnakeRings);
+window.addEventListener('resize',fitSnakeRings);
+
+/* ── Accordion ── */
 function toggleAcc(id){
   var el=document.getElementById(id),isOpen=el.classList.contains('open');
   el.classList.toggle('open',!isOpen);
   el.querySelector('.info-trigger').setAttribute('aria-expanded',String(!isOpen));
 }
 
+/* ── Data ── */
 var fwrData=null,fwgData=null,unfollowers=[],filtered=[];
 var PER=25,page=1;
 var IG_RX=/^[a-zA-Z0-9._]{1,30}$/;
@@ -532,8 +636,15 @@ function setupUpload(inputId,cardId,iconId,countId,onDone){
     document.getElementById(iconId).innerHTML='<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
     document.getElementById(countId).textContent=data.length.toLocaleString('id')+' akun';
     card.classList.add('uploaded');onDone(data);checkReady();
+    fitSnakeRings();
   });
-  ['dragover','dragleave','drop'].forEach(function(ev){card.addEventListener(ev,function(e){e.preventDefault();card.classList.toggle('dragover',ev==='dragover');});});
+  ['dragover','dragleave','drop'].forEach(function(ev){
+    card.addEventListener(ev,function(e){
+      e.preventDefault();
+      card.classList.toggle('dragover',ev==='dragover');
+      if(ev==='drop'){var f=e.dataTransfer.files[0];if(f){inp.files=e.dataTransfer.files;inp.dispatchEvent(new Event('change'));}}
+    });
+  });
 }
 setupUpload('fwrFile','fwrCard','fwrIcon','fwrCount',function(d){fwrData=d;});
 setupUpload('fwgFile','fwgCard','fwgIcon','fwgCount',function(d){fwgData=d;});
